@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://y8o3ld63x6fs"]
+
+[ext_resource type="Script" uid="uid://bleyam3ciln0r" path="res://scripts/mech.gd" id="1_im0vm"]
+[ext_resource type="Texture2D" uid="uid://yscl8g0wwlqd" path="res://icon.svg" id="2_7njkq"]
+
+[node name="mech" type="Node2D" unique_id=429761759]
+script = ExtResource("1_im0vm")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=731730465]
+texture = ExtResource("2_7njkq")

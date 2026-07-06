@@ -1,8 +1,9 @@
 [gd_scene format=3 uid="uid://cugnvkl40l0sh"]
 
-[ext_resource type="Script" uid="uid://d0ydwrwhasrio" path="res://addons/hex_strategy_map/examples/explorer_map/explorer_map.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://b70uq6ikwi1rv" path="res://addons/hex_strategy_map/examples/explorer_map/explorer_map.gd" id="1_script"]
 
 [node name="ExplorerMap" type="Node2D" unique_id=316055431]
+visible = false
 script = ExtResource("1_script")
 
 [node name="HexContainer" type="Node2D" parent="." unique_id=322907883]

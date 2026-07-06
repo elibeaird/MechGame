@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Actions" format=3 uid="uid://mcr7lb2sxo2u"]
+
+[ext_resource type="Script" uid="uid://bi6cxdrxaoq2i" path="res://scripts/Actions.gd" id="1_rwjjp"]
+
+[resource]
+script = ExtResource("1_rwjjp")
+display_name = "Move 1"
+Description = "move 1 hexe"
+movement = 1
+metadata/_custom_type_script = "uid://bi6cxdrxaoq2i"

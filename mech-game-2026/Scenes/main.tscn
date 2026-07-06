@@ -1,0 +1,50 @@
+[gd_scene format=3 uid="uid://d08jcosw60a4a"]
+
+[ext_resource type="Script" uid="uid://5dss30bvatpu" path="res://scripts/Game_Manager.gd" id="1_bo1nx"]
+[ext_resource type="PackedScene" uid="uid://y8o3ld63x6fs" path="res://Scenes/mech.tscn" id="2_8gbba"]
+[ext_resource type="Script" uid="uid://bi6cxdrxaoq2i" path="res://scripts/Actions.gd" id="3_8gbba"]
+[ext_resource type="Resource" uid="uid://jtfpkg0ydfvp" path="res://Actions/Melee_red.tres" id="4_21xkr"]
+[ext_resource type="Resource" uid="uid://mcr7lb2sxo2u" path="res://Actions/Move.tres" id="5_6bp64"]
+[ext_resource type="Resource" uid="uid://vgyjq56bujec" path="res://Actions/shoot_yellow.tres" id="6_344ge"]
+
+[node name="Main" type="Node2D" unique_id=256364714 node_paths=PackedStringArray("player_mech", "ai_mech")]
+script = ExtResource("1_bo1nx")
+player_mech = NodePath("player_mech")
+ai_mech = NodePath("ai_mech")
+
+[node name="player_mech" parent="." unique_id=429761759 instance=ExtResource("2_8gbba")]
+position = Vector2(208, 290)
+is_player = true
+actions = Array[ExtResource("3_8gbba")]([ExtResource("4_21xkr"), ExtResource("5_6bp64"), ExtResource("6_344ge")])
+
+[node name="ai_mech" parent="." unique_id=1684661054 instance=ExtResource("2_8gbba")]
+position = Vector2(607, 298)
+actions = Array[ExtResource("3_8gbba")]([ExtResource("5_6bp64"), ExtResource("6_344ge")])
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1507899182]
+offset_left = 23.0
+offset_top = 412.0
+offset_right = 162.0
+offset_bottom = 621.0
+
+[node name="PanelContainer" type="PanelContainer" parent="MarginContainer" unique_id=1650438120]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/PanelContainer" unique_id=1884493799]
+layout_mode = 2
+
+[node name="Button" type="Button" parent="MarginContainer/PanelContainer/VBoxContainer" unique_id=1794057459]
+layout_mode = 2
+text = "Attack"
+
+[node name="Button2" type="Button" parent="MarginContainer/PanelContainer/VBoxContainer" unique_id=1570787438]
+layout_mode = 2
+text = "Move"
+
+[node name="Button3" type="Button" parent="MarginContainer/PanelContainer/VBoxContainer" unique_id=282935447]
+layout_mode = 2
+text = "React"
+
+[node name="Button4" type="Button" parent="MarginContainer/PanelContainer/VBoxContainer" unique_id=371384130]
+layout_mode = 2
+text = "Special"

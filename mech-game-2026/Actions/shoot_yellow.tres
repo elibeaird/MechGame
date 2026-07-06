@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="Actions" format=3 uid="uid://vgyjq56bujec"]
+
+[ext_resource type="Script" uid="uid://bi6cxdrxaoq2i" path="res://scripts/Actions.gd" id="1_mwc77"]
+
+[resource]
+script = ExtResource("1_mwc77")
+display_name = "shoot "
+Description = "shoot range 3"
+yellow_dice = 2
+metadata/_custom_type_script = "uid://bi6cxdrxaoq2i"
