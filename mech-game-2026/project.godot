@@ -11,12 +11,14 @@ config_version=5
 [application]
 
 config/name="Mech Game 2026"
-run/main_scene="uid://cugnvkl40l0sh"
+run/main_scene="uid://d08jcosw60a4a"
 config/features=PackedStringArray("4.7", "GL Compatibility")
 config/icon="res://icon.svg"
 
 [display]
 
+window/size/viewport_width=1600
+window/size/viewport_height=900
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 

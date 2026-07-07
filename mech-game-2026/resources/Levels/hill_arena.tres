@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="LevelMap" format=3 uid="uid://drpw66j5gdxg"]
+
+[ext_resource type="Script" uid="uid://ca6pxlw8klyc7" path="res://scripts/LevelMap.gd" id="1_7caeq"]
+
+[resource]
+script = ExtResource("1_7caeq")
+grid_height = 10
+player_spawn = Vector2i(0, 0)
+ai_spawn = Vector2i(9, 9)
+tile_overrides = Array[Dictionary]([{}, {}, {}])
+forest_tiles = Array[Vector2i]([Vector2i(0, 0), Vector2i(0, 0)])
+metadata/_custom_type_script = "uid://ca6pxlw8klyc7"

@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="Part" format=3 uid="uid://b6767ymj6swtj"]
+
+[ext_resource type="Script" uid="uid://dve8mgkmjhqqp" path="res://scripts/Part.gd" id="1_pcksv"]
+
+[resource]
+script = ExtResource("1_pcksv")
+max_drones = 0
+display_name = "WM-Tera-Bark"
+range = 1
+red_dice = 2
+bonus_hp = 3
+required_level = 2
+metadata/_custom_type_script = "uid://dve8mgkmjhqqp"

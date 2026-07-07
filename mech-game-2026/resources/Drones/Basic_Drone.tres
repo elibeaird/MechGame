@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="DroneType" format=3 uid="uid://fwi3qx8kkgfw"]
+
+[ext_resource type="Script" uid="uid://d3fscaf7ua3mc" path="res://scripts/DroneType.gd" id="1_hvk44"]
+
+[resource]
+script = ExtResource("1_hvk44")
+display_name = "Basic Drone"
+movement = 2
+flight = true
+range = 2
+red_dice = 1

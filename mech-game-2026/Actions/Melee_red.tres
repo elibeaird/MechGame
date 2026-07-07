@@ -1,10 +1,10 @@
-[gd_resource type="Resource" script_class="Actions" format=3 uid="uid://jtfpkg0ydfvp"]
+[gd_resource type="Resource" script_class="Part" format=3 uid="uid://jtfpkg0ydfvp"]
 
-[ext_resource type="Script" uid="uid://bi6cxdrxaoq2i" path="res://scripts/Actions.gd" id="1_2jqrq"]
+[ext_resource type="Script" uid="uid://dve8mgkmjhqqp" path="res://scripts/Part.gd" id="1_2jqrq"]
 
 [resource]
 script = ExtResource("1_2jqrq")
 display_name = "Melee Attack"
 Description = "attack at range 1"
 red_dice = 3
-metadata/_custom_type_script = "uid://bi6cxdrxaoq2i"
+metadata/_custom_type_script = "uid://dve8mgkmjhqqp"

@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="Part" format=3 uid="uid://cbergeohh5bht"]
+
+[ext_resource type="Script" uid="uid://dve8mgkmjhqqp" path="res://scripts/Part.gd" id="1_ecwuh"]
+
+[resource]
+script = ExtResource("1_ecwuh")
+max_drones = 0
+display_name = "WM-Aqua_Claw"
+range = 1
+is_aoe = true
+red_dice = 2
+bonus_hp = 4
+required_level = 2

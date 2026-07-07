@@ -1,50 +1,218 @@
 [gd_scene format=3 uid="uid://d08jcosw60a4a"]
 
 [ext_resource type="Script" uid="uid://5dss30bvatpu" path="res://scripts/Game_Manager.gd" id="1_bo1nx"]
+[ext_resource type="Resource" uid="uid://drpw66j5gdxg" path="res://resources/Levels/hill_arena.tres" id="2_6bp64"]
 [ext_resource type="PackedScene" uid="uid://y8o3ld63x6fs" path="res://Scenes/mech.tscn" id="2_8gbba"]
-[ext_resource type="Script" uid="uid://bi6cxdrxaoq2i" path="res://scripts/Actions.gd" id="3_8gbba"]
-[ext_resource type="Resource" uid="uid://jtfpkg0ydfvp" path="res://Actions/Melee_red.tres" id="4_21xkr"]
-[ext_resource type="Resource" uid="uid://mcr7lb2sxo2u" path="res://Actions/Move.tres" id="5_6bp64"]
-[ext_resource type="Resource" uid="uid://vgyjq56bujec" path="res://Actions/shoot_yellow.tres" id="6_344ge"]
+[ext_resource type="Script" uid="uid://dve8mgkmjhqqp" path="res://scripts/Part.gd" id="3_part"]
+[ext_resource type="Resource" uid="uid://cbergeohh5bht" path="res://resources/parts/WM-Aqua_Claw.tres" id="5_claw"]
+[ext_resource type="Resource" uid="uid://bj00v6q8ifn3y" path="res://resources/parts/WM-Aqua-Rech.tres" id="5_hptm8"]
+[ext_resource type="Resource" uid="uid://bsclvon7ebmxp" path="res://resources/parts/WM-Aqua_Bird.tres" id="5_ynf5e"]
+[ext_resource type="Script" uid="uid://cx76t3u32jflu" path="res://scripts/LoadoutScreen.gd" id="6_loadout"]
+[ext_resource type="Resource" uid="uid://cw4g1d72bnr84" path="res://resources/parts/WM-Aqua_Wave.tres" id="8_d1ilt"]
 
 [node name="Main" type="Node2D" unique_id=256364714 node_paths=PackedStringArray("player_mech", "ai_mech")]
 script = ExtResource("1_bo1nx")
 player_mech = NodePath("player_mech")
 ai_mech = NodePath("ai_mech")
+level_map = ExtResource("2_6bp64")
+
+[node name="HexContainer" type="Node2D" parent="." unique_id=1418091569]
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=1567481253]
 
 [node name="player_mech" parent="." unique_id=429761759 instance=ExtResource("2_8gbba")]
-position = Vector2(208, 290)
 is_player = true
-actions = Array[ExtResource("3_8gbba")]([ExtResource("4_21xkr"), ExtResource("5_6bp64"), ExtResource("6_344ge")])
+hex_coord = Vector2i(1, 5)
 
 [node name="ai_mech" parent="." unique_id=1684661054 instance=ExtResource("2_8gbba")]
-position = Vector2(607, 298)
-actions = Array[ExtResource("3_8gbba")]([ExtResource("5_6bp64"), ExtResource("6_344ge")])
+parts = Array[ExtResource("3_part")]([ExtResource("5_hptm8"), ExtResource("5_ynf5e"), ExtResource("5_claw"), ExtResource("8_d1ilt")])
+hex_coord = Vector2i(8, 5)
+facing = 3
 
-[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1507899182]
+[node name="UI" type="CanvasLayer" parent="." unique_id=802051713]
+
+[node name="MarginContainer" type="MarginContainer" parent="UI" unique_id=1507899182]
 offset_left = 23.0
-offset_top = 412.0
-offset_right = 162.0
-offset_bottom = 621.0
+offset_top = 340.0
+offset_right = 340.0
+offset_bottom = 630.0
 
-[node name="PanelContainer" type="PanelContainer" parent="MarginContainer" unique_id=1650438120]
+[node name="PanelContainer" type="PanelContainer" parent="UI/MarginContainer" unique_id=1650438120]
 layout_mode = 2
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/PanelContainer" unique_id=1884493799]
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/MarginContainer/PanelContainer" unique_id=1884493799]
 layout_mode = 2
 
-[node name="Button" type="Button" parent="MarginContainer/PanelContainer/VBoxContainer" unique_id=1794057459]
+[node name="StatusLabel" type="Label" parent="UI/MarginContainer/PanelContainer/VBoxContainer" unique_id=655029339]
 layout_mode = 2
-text = "Attack"
+text = "..."
+autowrap_mode = 2
 
-[node name="Button2" type="Button" parent="MarginContainer/PanelContainer/VBoxContainer" unique_id=1570787438]
+[node name="MovePointsLabel" type="Label" parent="UI/MarginContainer/PanelContainer/VBoxContainer" unique_id=969679959]
+visible = false
+layout_mode = 2
+text = "Movement left: 0"
+
+[node name="DiceRow" type="HBoxContainer" parent="UI/MarginContainer/PanelContainer/VBoxContainer" unique_id=1800153291]
+layout_mode = 2
+
+[node name="ActionColumns" type="HBoxContainer" parent="UI/MarginContainer/PanelContainer/VBoxContainer" unique_id=1045761810]
+layout_mode = 2
+
+[node name="FirstActionColumn" type="VBoxContainer" parent="UI/MarginContainer/PanelContainer/VBoxContainer/ActionColumns" unique_id=27816954]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="UI/MarginContainer/PanelContainer/VBoxContainer/ActionColumns/FirstActionColumn" unique_id=776053041]
+layout_mode = 2
+text = "1st Action"
+horizontal_alignment = 1
+
+[node name="MoveButton1" type="Button" parent="UI/MarginContainer/PanelContainer/VBoxContainer/ActionColumns/FirstActionColumn" unique_id=42632120]
 layout_mode = 2
 text = "Move"
 
-[node name="Button3" type="Button" parent="MarginContainer/PanelContainer/VBoxContainer" unique_id=282935447]
+[node name="SecondActionColumn" type="VBoxContainer" parent="UI/MarginContainer/PanelContainer/VBoxContainer/ActionColumns" unique_id=2123661298]
 layout_mode = 2
-text = "React"
 
-[node name="Button4" type="Button" parent="MarginContainer/PanelContainer/VBoxContainer" unique_id=371384130]
+[node name="Label" type="Label" parent="UI/MarginContainer/PanelContainer/VBoxContainer/ActionColumns/SecondActionColumn" unique_id=1915816970]
+layout_mode = 2
+text = "2nd Action"
+horizontal_alignment = 1
+
+[node name="MoveButton2" type="Button" parent="UI/MarginContainer/PanelContainer/VBoxContainer/ActionColumns/SecondActionColumn" unique_id=356303131]
+layout_mode = 2
+text = "Move"
+
+[node name="AttackButton" type="Button" parent="UI/MarginContainer/PanelContainer/VBoxContainer/ActionColumns/SecondActionColumn" unique_id=294206118]
+layout_mode = 2
+text = "Attack"
+
+[node name="SpecialButton" type="Button" parent="UI/MarginContainer/PanelContainer/VBoxContainer/ActionColumns/SecondActionColumn" unique_id=1821371954]
 layout_mode = 2
 text = "Special"
+
+[node name="EndTurnColumn" type="VBoxContainer" parent="UI/MarginContainer/PanelContainer/VBoxContainer/ActionColumns" unique_id=1450500606]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="UI/MarginContainer/PanelContainer/VBoxContainer/ActionColumns/EndTurnColumn" unique_id=2067775865]
+layout_mode = 2
+text = "Turn"
+horizontal_alignment = 1
+
+[node name="EndTurnButton" type="Button" parent="UI/MarginContainer/PanelContainer/VBoxContainer/ActionColumns/EndTurnColumn" unique_id=1945609876]
+layout_mode = 2
+text = "End Turn"
+
+[node name="ReactButton" type="Button" parent="UI/MarginContainer/PanelContainer/VBoxContainer" unique_id=614893815]
+layout_mode = 2
+disabled = true
+text = "React"
+
+[node name="SkipMoveButton" type="Button" parent="UI/MarginContainer/PanelContainer/VBoxContainer" unique_id=1070815249]
+layout_mode = 2
+disabled = true
+text = "Skip Remaining Move"
+
+[node name="DroneActionPopup" type="PopupPanel" parent="UI" unique_id=1099059412]
+size = Vector2i(220, 180)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/DroneActionPopup" unique_id=830407028]
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 216.0
+offset_bottom = 176.0
+
+[node name="TitleLabel" type="Label" parent="UI/DroneActionPopup/VBoxContainer" unique_id=258566047]
+layout_mode = 2
+text = "Drone Action"
+horizontal_alignment = 1
+
+[node name="MoveButton" type="Button" parent="UI/DroneActionPopup/VBoxContainer" unique_id=162666724]
+layout_mode = 2
+text = "Move"
+
+[node name="AttackButton" type="Button" parent="UI/DroneActionPopup/VBoxContainer" unique_id=1718932637]
+layout_mode = 2
+text = "Attack"
+
+[node name="CrashButton" type="Button" parent="UI/DroneActionPopup/VBoxContainer" unique_id=108350743]
+layout_mode = 2
+text = "Crash (destroys drone)"
+
+[node name="AttackWeaponPopup" type="PopupPanel" parent="UI" unique_id=1379310847]
+size = Vector2i(260, 220)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/AttackWeaponPopup" unique_id=1180939684]
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 256.0
+offset_bottom = 216.0
+
+[node name="TitleLabel" type="Label" parent="UI/AttackWeaponPopup/VBoxContainer" unique_id=603283691]
+layout_mode = 2
+text = "Choose Weapon"
+horizontal_alignment = 1
+
+[node name="WeaponList" type="VBoxContainer" parent="UI/AttackWeaponPopup/VBoxContainer" unique_id=1430792168]
+layout_mode = 2
+
+[node name="LoadoutLayer" type="CanvasLayer" parent="." unique_id=1326255289]
+layer = 10
+script = ExtResource("6_loadout")
+
+[node name="Background" type="ColorRect" parent="LoadoutLayer" unique_id=598993173]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.08, 0.09, 0.11, 1)
+
+[node name="CenterContainer" type="CenterContainer" parent="LoadoutLayer" unique_id=972816862]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="PanelContainer" type="PanelContainer" parent="LoadoutLayer/CenterContainer" unique_id=2005604619]
+custom_minimum_size = Vector2(760, 520)
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="LoadoutLayer/CenterContainer/PanelContainer" unique_id=2100188295]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="LoadoutLayer/CenterContainer/PanelContainer/VBoxContainer" unique_id=363050673]
+layout_mode = 2
+text = "Build Your Loadout"
+horizontal_alignment = 1
+
+[node name="ContentRow" type="HBoxContainer" parent="LoadoutLayer/CenterContainer/PanelContainer/VBoxContainer" unique_id=1832633576]
+layout_mode = 2
+
+[node name="StatsColumn" type="VBoxContainer" parent="LoadoutLayer/CenterContainer/PanelContainer/VBoxContainer/ContentRow" unique_id=1261463151]
+custom_minimum_size = Vector2(220, 0)
+layout_mode = 2
+
+[node name="StatsLabel" type="Label" parent="LoadoutLayer/CenterContainer/PanelContainer/VBoxContainer/ContentRow/StatsColumn" unique_id=864549160]
+layout_mode = 2
+text = "..."
+autowrap_mode = 2
+
+[node name="PartsColumn" type="VBoxContainer" parent="LoadoutLayer/CenterContainer/PanelContainer/VBoxContainer/ContentRow" unique_id=681127170]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="PartsScroll" type="ScrollContainer" parent="LoadoutLayer/CenterContainer/PanelContainer/VBoxContainer/ContentRow/PartsColumn" unique_id=102807297]
+custom_minimum_size = Vector2(320, 280)
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="PartsList" type="VBoxContainer" parent="LoadoutLayer/CenterContainer/PanelContainer/VBoxContainer/ContentRow/PartsColumn/PartsScroll" unique_id=1581121963]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="RightColumn" type="VBoxContainer" parent="LoadoutLayer/CenterContainer/PanelContainer/VBoxContainer/ContentRow" unique_id=1946646683]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+alignment = 1
+
+[node name="LoadoutStartMatchButton" type="Button" parent="LoadoutLayer/CenterContainer/PanelContainer/VBoxContainer/ContentRow/RightColumn" unique_id=1266428615]
+layout_mode = 2
+text = "Start Match"

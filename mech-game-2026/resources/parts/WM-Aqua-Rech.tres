@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="Part" format=3 uid="uid://bj00v6q8ifn3y"]
+
+[ext_resource type="Script" uid="uid://dve8mgkmjhqqp" path="res://scripts/Part.gd" id="1_2dn77"]
+
+[resource]
+script = ExtResource("1_2dn77")
+max_drones = 0
+range = 5
+min_range = 2
+blue_dice = 1
+required_level = 1
+dice_scale_with_level = true
+metadata/_custom_type_script = "uid://dve8mgkmjhqqp"

@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="Part" format=3 uid="uid://bsclvon7ebmxp"]
+
+[ext_resource type="Script" uid="uid://dve8mgkmjhqqp" path="res://scripts/Part.gd" id="1_5v4vl"]
+[ext_resource type="Resource" uid="uid://fwi3qx8kkgfw" path="res://resources/Drones/Basic_Drone.tres" id="2_basic_drone"]
+
+[resource]
+script = ExtResource("1_5v4vl")
+drone_type = ExtResource("2_basic_drone")
+max_drones = 3
+display_name = "WM-Aqua_Claw"
+bonus_hp = 4
+required_level = 1
+dice_scale_with_level = true

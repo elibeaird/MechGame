@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="LevelMap" format=3]
+
+[ext_resource type="Script" path="res://scripts/LevelMap.gd" id="1_levelmap"]
+
+[resource]
+script = ExtResource("1_levelmap")
+grid_width = 10
+grid_height = 11
+player_spawn = Vector2i(1, 5)
+ai_spawn = Vector2i(8, 5)
+ai_facing = 3
+tile_overrides = Array[Dictionary]([{"coord": Vector2i(5, 4), "terrain": 3}, {"coord": Vector2i(6, 4), "terrain": 3}, {"coord": Vector2i(4, 5), "terrain": 3}, {"coord": Vector2i(5, 5), "terrain": 3}, {"coord": Vector2i(6, 5), "terrain": 3}, {"coord": Vector2i(5, 6), "terrain": 3}, {"coord": Vector2i(6, 6), "terrain": 3}, {"coord": Vector2i(4, 3), "terrain": 101}, {"coord": Vector2i(5, 3), "terrain": 101}, {"coord": Vector2i(6, 3), "terrain": 101}, {"coord": Vector2i(4, 4), "terrain": 101}, {"coord": Vector2i(7, 4), "terrain": 101}, {"coord": Vector2i(3, 5), "terrain": 101}, {"coord": Vector2i(7, 5), "terrain": 101}, {"coord": Vector2i(4, 6), "terrain": 101}, {"coord": Vector2i(7, 6), "terrain": 101}, {"coord": Vector2i(4, 7), "terrain": 101}, {"coord": Vector2i(5, 7), "terrain": 101}, {"coord": Vector2i(6, 7), "terrain": 101}, {"coord": Vector2i(4, 2), "terrain": 100}, {"coord": Vector2i(5, 2), "terrain": 100}, {"coord": Vector2i(6, 2), "terrain": 100}, {"coord": Vector2i(7, 2), "terrain": 100}, {"coord": Vector2i(3, 3), "terrain": 100}, {"coord": Vector2i(7, 3), "terrain": 100}, {"coord": Vector2i(3, 4), "terrain": 100}, {"coord": Vector2i(8, 4), "terrain": 100}, {"coord": Vector2i(2, 5), "terrain": 100}, {"coord": Vector2i(8, 5), "terrain": 100}, {"coord": Vector2i(3, 6), "terrain": 100}, {"coord": Vector2i(8, 6), "terrain": 100}, {"coord": Vector2i(3, 7), "terrain": 100}, {"coord": Vector2i(7, 7), "terrain": 100}, {"coord": Vector2i(4, 8), "terrain": 100}, {"coord": Vector2i(5, 8), "terrain": 100}, {"coord": Vector2i(6, 8), "terrain": 100}, {"coord": Vector2i(7, 8), "terrain": 100}])
+forest_tiles = Array[Vector2i]([Vector2i(0, 0), Vector2i(7, 0), Vector2i(2, 1), Vector2i(9, 1), Vector2i(1, 4), Vector2i(0, 7), Vector2i(2, 8), Vector2i(9, 8), Vector2i(4, 9), Vector2i(6, 10)])
