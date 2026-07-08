@@ -39,24 +39,30 @@ func am_i_host() -> bool:
 ## native build (see class comment) — calling this from an HTML5 export
 ## will fail since browsers can't open a listening socket.
 func host_game(port: int = DEFAULT_PORT) -> Error:
+	print("[NetworkManager] host_game: starting server on port %d" % port)
 	var peer := WebSocketMultiplayerPeer.new()
 	var err := peer.create_server(port)
 	if err != OK:
+		print("[NetworkManager] host_game: create_server failed, error=%d" % err)
 		return err
 	multiplayer.multiplayer_peer = peer
 	mode = Mode.HOST
+	print("[NetworkManager] host_game: listening on port %d, waiting for a peer..." % port)
 	return OK
 
 
 ## Connects to a host at address:port. Works from both native and HTML5
 ## builds. address should not include a scheme — "ws://" is added here.
 func join_game(address: String, port: int = DEFAULT_PORT) -> Error:
+	print("[NetworkManager] join_game: connecting to ws://%s:%d" % [address, port])
 	var peer := WebSocketMultiplayerPeer.new()
 	var err := peer.create_client("ws://%s:%d" % [address, port])
 	if err != OK:
+		print("[NetworkManager] join_game: create_client failed immediately, error=%d" % err)
 		return err
 	multiplayer.multiplayer_peer = peer
 	mode = Mode.CLIENT
+	print("[NetworkManager] join_game: client created, attempt in progress (async — watch for peer_connected/connection_failed below)")
 	return OK
 
 
@@ -69,15 +75,19 @@ func disconnect_and_reset():
 
 
 func _on_peer_connected(peer_id: int):
+	print("[NetworkManager] peer_connected: peer_id=%d (mode=%s)" % [peer_id, Mode.keys()[mode]])
 	peer_connected.emit(peer_id)
 
 func _on_peer_disconnected(peer_id: int):
+	print("[NetworkManager] peer_disconnected: peer_id=%d" % peer_id)
 	peer_disconnected.emit(peer_id)
 
 func _on_connection_failed():
+	print("[NetworkManager] connection_failed — the join attempt did not reach the host")
 	mode = Mode.SOLO_VS_AI
 	connection_failed.emit()
 
 func _on_server_disconnected():
+	print("[NetworkManager] server_disconnected — lost connection to the host")
 	mode = Mode.SOLO_VS_AI
 	server_disconnected.emit()

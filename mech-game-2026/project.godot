@@ -20,6 +20,10 @@ config/icon="res://icon.svg"
 NetworkManager="*res://scripts/NetworkManager.gd"
 _mcp_game_helper="*res://addons/godot_ai/runtime/game_helper.gd"
 
+[debug]
+
+file_logging/enable_file_logging=true
+
 [display]
 
 window/size/viewport_width=1600

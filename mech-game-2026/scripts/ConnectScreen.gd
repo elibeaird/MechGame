@@ -38,8 +38,10 @@ func _on_vs_ai_pressed():
 
 func _on_host_pressed():
 	var port := int(port_input.text) if port_input.text.is_valid_int() else NetworkManager.DEFAULT_PORT
+	print("[ConnectScreen] Host pressed, port=%d" % port)
 	var err := NetworkManager.host_game(port)
 	if err != OK:
+		print("[ConnectScreen] host_game returned error %d" % err)
 		status_label.text = "Couldn't start hosting (error %d) — is that port already in use?" % err
 		return
 	_set_buttons_disabled(true)
@@ -52,8 +54,10 @@ func _on_join_pressed():
 		status_label.text = "Enter the host's address first"
 		return
 	var port := int(port_input.text) if port_input.text.is_valid_int() else NetworkManager.DEFAULT_PORT
+	print("[ConnectScreen] Join pressed, address=%s port=%d" % [address, port])
 	var err := NetworkManager.join_game(address, port)
 	if err != OK:
+		print("[ConnectScreen] join_game returned error %d" % err)
 		status_label.text = "Couldn't connect (error %d)" % err
 		return
 	_set_buttons_disabled(true)
