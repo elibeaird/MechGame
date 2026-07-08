@@ -48,6 +48,31 @@ extends Resource
 ## level 1). Pair with required_level >= 1 — at level 0 this rolls no dice at all.
 @export var dice_scale_with_level : bool = false
 
+## Custom sprite art for this part/drone type, authored as a whole scene
+## instead of filling in a texture array one frame at a time: make a small
+## scene (root = AnimatedSprite2D, or an AnimatedSprite2D anywhere inside
+## it) and use Godot's SpriteFrames editor panel to build whichever of these
+## named animations apply — "attack" and "move" for a Part, plus "idle",
+## "deploy", "crash", "hit", "defeated" for a DroneType (see DroneType.gd).
+## Only the names actually present are used; anything missing falls back to
+## the mech/drone's own default (see mech.gd's play_attack_animation()/
+## play_move_animation() and Drone.gd's play_*_animation() methods). Null =
+## use the defaults for everything.
+@export var visual_scene : PackedScene = null
+
+var _cached_visual_frames : SpriteFrames = null
+var _cached_visual_scene : PackedScene = null
+
+## Lazily extracts and caches visual_scene's SpriteFrames (see
+## SpriteFramesUtil.extract_sprite_frames()). Null if visual_scene isn't set.
+func get_visual_frames() -> SpriteFrames:
+	if visual_scene == null:
+		return null
+	if _cached_visual_scene != visual_scene:
+		_cached_visual_frames = SpriteFramesUtil.extract_sprite_frames(visual_scene)
+		_cached_visual_scene = visual_scene
+	return _cached_visual_frames
+
 ## True if current_level satisfies this part's level requirement, honoring
 ## exact_level_required (== vs >=).
 func level_met(current_level: int) -> bool:

@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="DroneType" format=3 uid="uid://dxtek32n1seda"]
+
+[ext_resource type="Script" uid="uid://d3fscaf7ua3mc" path="res://scripts/DroneType.gd" id="1_kgx7r"]
+
+[resource]
+script = ExtResource("1_kgx7r")
+display_name = "Basic Drone"
+movement = 3
+flight = true
+is_aoe = true

@@ -1,10 +1,16 @@
 [gd_resource type="Resource" script_class="Part" format=3 uid="uid://b6767ymj6swtj"]
 
+[ext_resource type="Script" uid="uid://bi6cxdrxaoq2i" path="res://scripts/Actions.gd" id="1_fhiuw"]
 [ext_resource type="Script" uid="uid://dve8mgkmjhqqp" path="res://scripts/Part.gd" id="1_pcksv"]
+
+[sub_resource type="Resource" id="Resource_hibaj"]
+script = ExtResource("1_fhiuw")
+metadata/_custom_type_script = "uid://bi6cxdrxaoq2i"
 
 [resource]
 script = ExtResource("1_pcksv")
 max_drones = 0
+reaction_action = SubResource("Resource_hibaj")
 display_name = "WM-Tera-Bark"
 range = 1
 red_dice = 2

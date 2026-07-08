@@ -1,7 +1,30 @@
-[gd_resource type="Resource" script_class="LevelMap" format=3 uid="uid://d3g1f5skhuqed"]
+[gd_resource type="Resource" script_class="LevelMap" format=3 uid="uid://crw624k6qlqgx"]
 
 [ext_resource type="Script" uid="uid://ca6pxlw8klyc7" path="res://scripts/LevelMap.gd" id="1_i5odo"]
+[ext_resource type="Resource" uid="uid://duvyu6na168fm" path="res://resources/Terrain/Pillar.tres" id="2_tohvq"]
 
 [resource]
+resource_local_to_scene = true
+resource_name = "pillar.tes"
 script = ExtResource("1_i5odo")
+ai_spawn = Vector2i(7, 5)
+tile_overrides = Array[Dictionary]([{
+"coord": Vector2i(3, 3),
+"terrain": ExtResource("2_tohvq")
+}, {
+"coord": Vector2i(5, 3),
+"terrain": ExtResource("2_tohvq")
+}, {
+"coord": Vector2i(6, 5),
+"terrain": ExtResource("2_tohvq")
+}, {
+"coord": Vector2i(5, 7),
+"terrain": ExtResource("2_tohvq")
+}, {
+"coord": Vector2i(3, 7),
+"terrain": ExtResource("2_tohvq")
+}, {
+"coord": Vector2i(2, 5),
+"terrain": ExtResource("2_tohvq")
+}])
 metadata/_custom_type_script = "uid://ca6pxlw8klyc7"

@@ -4,11 +4,11 @@ extends Node2D
 ## base and tip sit past this hex's own edge, inside the neighbor — it reads
 ## as "this hex over there", not as a decoration on the mech itself.
 
-const WIDTH := 14.0
+const WIDTH := 30.0
 const COLOR := Color(1.0, 1.0, 1.0, 0.9)
 
 ## Distance from the mech's center to the tip, in pixels.
-@export var length : float = 60.0 :
+@export var length : float = 5.0 :
 	set(value):
 		length = value
 		queue_redraw()

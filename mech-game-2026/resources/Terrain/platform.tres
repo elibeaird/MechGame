@@ -1,0 +1,11 @@
+[gd_resource type="Resource" script_class="TerrainType" format=3 uid="uid://csht3msfm5amx"]
+
+[ext_resource type="Script" uid="uid://1mabv3r8efli" path="res://scripts/TerrainType.gd" id="1_terraintype"]
+
+[resource]
+script = ExtResource("1_terraintype")
+display_name = "platform"
+color = Color(0.16811217, 0.18250069, 0.39473155, 1)
+difficulty = 0
+Hp = 0
+objective = true

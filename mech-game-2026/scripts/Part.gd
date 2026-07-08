@@ -15,3 +15,11 @@ extends Actions
 ## Deploying uses one up; once a drone dies, another can be deployed as long
 ## as this budget isn't exhausted. Only meaningful when drone_type is set.
 @export var max_drones : int = 1
+
+## If true, this part grants a Reaction instead of an attack: when this mech
+## is attacked, this part's own dice (red/blue/yellow/purple, same fields
+## used for an attack) roll against the incoming hit and reduce its damage,
+## gated by this part's own required_level like its other capabilities. A
+## part can't do both — one that can_react is excluded from attack options
+## (see mech.get_attack_action_for_range()/get_available_attack_actions()).
+@export var can_react : bool = false

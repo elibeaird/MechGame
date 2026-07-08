@@ -5,7 +5,7 @@
 [resource]
 script = ExtResource("1_okr8s")
 max_drones = 0
-movement = 2
+movement = 4
 bonus_hp = 3
 required_level = 2
 metadata/_custom_type_script = "uid://dve8mgkmjhqqp"

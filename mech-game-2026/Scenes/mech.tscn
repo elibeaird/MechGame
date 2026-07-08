@@ -1,29 +1,201 @@
 [gd_scene format=3 uid="uid://y8o3ld63x6fs"]
 
 [ext_resource type="Script" uid="uid://bleyam3ciln0r" path="res://scripts/mech.gd" id="1_im0vm"]
-[ext_resource type="Texture2D" uid="uid://yscl8g0wwlqd" path="res://icon.svg" id="2_7njkq"]
-[ext_resource type="Script" path="res://scripts/FacingArrow.gd" id="3_facing"]
+[ext_resource type="Texture2D" uid="uid://ddtj434ayxujy" path="res://images/sprites/mech sprite_v2_1.png" id="3_5grai"]
+[ext_resource type="Script" uid="uid://cv74mnvlqboev" path="res://scripts/FacingArrow.gd" id="3_facing"]
+[ext_resource type="Texture2D" uid="uid://b6mrkgk0wsvc0" path="res://images/animations/mech_defeat_1.png" id="3_lyl7j"]
+[ext_resource type="Texture2D" uid="uid://bn45w8tq0opgn" path="res://images/animations/mech_defeat_2.png" id="4_l7xhr"]
+[ext_resource type="Texture2D" uid="uid://4e8pqorc0y7n" path="res://images/animations/mech_defeat_3.png" id="5_ap6yb"]
+[ext_resource type="Texture2D" uid="uid://cnkihj0dmxm18" path="res://images/animations/mech_defeat_4.png" id="6_2i65s"]
+[ext_resource type="Texture2D" uid="uid://my8tgku0ucs0" path="res://images/sprites/mech sprite_v2_3.png" id="8_lyl7j"]
+[ext_resource type="Texture2D" uid="uid://dngdghw5c63w5" path="res://images/sprites/mech sprite_v2_5.png" id="9_l7xhr"]
+[ext_resource type="Texture2D" uid="uid://b8pq6olppl276" path="res://images/animations/melee_hit_1.png" id="10_dai31"]
+[ext_resource type="Texture2D" uid="uid://dm12agosh80tp" path="res://images/animations/melee_hit_2.png" id="11_07nox"]
+[ext_resource type="Texture2D" uid="uid://7gu2amprd15f" path="res://images/animations/melee_hit_3.png" id="12_v2j8l"]
+[ext_resource type="Texture2D" uid="uid://cppqw4k3qrrb6" path="res://images/animations/range_hit_1.png" id="13_krxro"]
+[ext_resource type="Texture2D" uid="uid://dsx4nbu6nf3e8" path="res://images/animations/range_hit_2.png" id="14_ntqdo"]
+[ext_resource type="Texture2D" uid="uid://djaktp6c10fb5" path="res://images/animations/range_hit_3.png" id="15_18s5m"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_body_right"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_lyl7j")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_l7xhr")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_ap6yb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_2i65s")
+}],
+"loop": 0,
+"name": &"defeated",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_5grai")
+}],
+"loop": 0,
+"name": &"hit",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_5grai")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 5.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_body_upper_right"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_lyl7j")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_l7xhr")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_ap6yb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_2i65s")
+}],
+"loop": 0,
+"name": &"defeated",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("8_lyl7j")
+}],
+"loop": 0,
+"name": &"hit",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("8_lyl7j")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 5.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_body_lower_right"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_lyl7j")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_l7xhr")
+}, {
+"duration": 1.0,
+"texture": ExtResource("5_ap6yb")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_2i65s")
+}],
+"loop": 0,
+"name": &"defeated",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("9_l7xhr")
+}],
+"loop": 0,
+"name": &"hit",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("9_l7xhr")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 5.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_attack_effect"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("10_dai31")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_07nox")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_v2j8l")
+}],
+"loop": 0,
+"name": &"melee_attack",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("13_krxro")
+}, {
+"duration": 1.0,
+"texture": ExtResource("14_ntqdo")
+}, {
+"duration": 1.0,
+"texture": ExtResource("15_18s5m")
+}],
+"loop": 0,
+"name": &"ranged_attack",
+"speed": 8.0
+}]
 
 [node name="mech" type="Node2D" unique_id=429761759]
 script = ExtResource("1_im0vm")
 
-[node name="FacingArrow" type="Node2D" parent="."]
+[node name="FacingArrow" type="Node2D" parent="." unique_id=1512634847]
 script = ExtResource("3_facing")
 
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=731730465]
-scale = Vector2(0.45, 0.45)
-texture = ExtResource("2_7njkq")
+[node name="BodyRight" type="AnimatedSprite2D" parent="." unique_id=731730465]
+scale = Vector2(0.073249996, 0.073249996)
+sprite_frames = SubResource("SpriteFrames_body_right")
+animation = &"hit"
 
-[node name="HealthBarBg" type="ColorRect" parent="."]
+[node name="BodyUpperRight" type="AnimatedSprite2D" parent="." unique_id=1572332409]
+visible = false
+scale = Vector2(0.073249996, 0.073249996)
+sprite_frames = SubResource("SpriteFrames_body_upper_right")
+animation = &"defeated"
+
+[node name="BodyLowerRight" type="AnimatedSprite2D" parent="." unique_id=833387710]
+visible = false
+scale = Vector2(0.073249996, 0.073249996)
+sprite_frames = SubResource("SpriteFrames_body_lower_right")
+animation = &"defeated"
+
+[node name="AttackEffect" type="AnimatedSprite2D" parent="." unique_id=768543483]
+visible = false
+scale = Vector2(0.073249996, 0.073249996)
+sprite_frames = SubResource("SpriteFrames_attack_effect")
+animation = &"melee_attack"
+
+[node name="HealthBarBg" type="ColorRect" parent="." unique_id=1926490180]
 offset_left = -20.0
 offset_top = 34.0
 offset_right = 20.0
 offset_bottom = 40.0
 color = Color(0.15, 0.15, 0.15, 0.9)
 
-[node name="HealthBarFill" type="ColorRect" parent="."]
+[node name="HealthBarFill" type="ColorRect" parent="." unique_id=632327068]
 offset_left = -20.0
 offset_top = 34.0
 offset_right = 20.0
 offset_bottom = 40.0
 color = Color(0.2, 0.8, 0.2, 1)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=816962848]

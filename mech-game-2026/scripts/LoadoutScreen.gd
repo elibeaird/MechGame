@@ -5,13 +5,31 @@ extends CanvasLayer
 
 signal start_match
 
-## Folder scanned for equippable Part resources.
+## Folder equippable Part resources live in — see PART_PATHS below for why
+## this isn't scanned at runtime.
 const PARTS_FOLDER := "res://resources/parts/"
 
+## Every equippable part, listed explicitly. DirAccess can't list res://
+## folder contents in an exported build (editor/native --path runs are fine,
+## but an exported PCK — including the Web export — has no directory listing,
+## only direct load() by path), so a new part file needs one line added here
+## to show up in the loadout screen.
+const PART_PATHS : Array[String] = [
+	"WM-Aqua-Rech.tres",
+	"WM-Aqua_Bird.tres",
+	"WM-Aqua_Claw.tres",
+	"WM-Aqua_Wave.tres",
+	"WM-Tera-Bark.tres",
+	"WM-Tera-Brnc.tres",
+	"WM-Tera-Camp.tres",
+	"WM-Tera-Root.tres",
+]
+
 ## Source icon shown per part in the loadout list, keyed to its level
-## requirement. "x" = usable at any charged level (required_level > 0,
-## minimum, not exact — the flexible case); "0"/"1"/"2"/"3" = no requirement
-## or an exact tier. These are full-size (834x563) — see _get_level_icon().
+## requirement: "0" = no requirement, "1"/"2"/"3" = that required_level
+## (whether it's a minimum or an exact tier — either way, that's the level
+## that matters). "x" is just a fallback for an out-of-range required_level.
+## These are full-size (834x563) — see _get_level_icon().
 const LEVEL_ICONS := {
 	"0": preload("res://images/Action_lvl_icon/lvl_0.png"),
 	"1": preload("res://images/Action_lvl_icon/lvl_1.png"),
@@ -21,31 +39,37 @@ const LEVEL_ICONS := {
 }
 ## Button doesn't support capping icon size in this Godot version, so icons
 ## are pre-resized to this size (same aspect ratio as the source) and cached.
-const LEVEL_ICON_SIZE := Vector2i(30, 20)
+const LEVEL_ICON_SIZE := Vector2i(44, 30)
 var _resized_level_icons : Dictionary = {}
 
 ## Badge icon per action type a part can grant, shown next to it in the list.
 ## "melee" and "ranged" are mutually exclusive (whichever matches the part's
 ## attack range), not layered on top of a generic attack icon.
 const ACTION_TYPE_ICONS := {
-	"movement": preload("res://images/Action type/action_move.png"),
+	"movement": preload("res://images/Action type/move.png"),
 	"melee": preload("res://images/Action type/Action_melee.png"),
 	"ranged": preload("res://images/Action type/action_ranged.png"),
-	"special": preload("res://images/Action type/action_special.png"),
-	"block": preload("res://images/Action type/action_block.png"),
+	"special": preload("res://images/Action type/drone.png"),
+	"block": preload("res://images/Action type/block.png"),
 }
 ## Source images share a height (209) but differ in width, so icons are
 ## resized to this height keeping each one's own aspect ratio (see
 ## _get_resized_action_type_icon()) rather than a single fixed box.
-const ACTION_TYPE_ICON_HEIGHT := 14
+const ACTION_TYPE_ICON_HEIGHT := 30
 var _resized_action_type_icons : Dictionary = {}
+
+## Sizing for each row in the equippable-parts list — bumped up from Godot's
+## default (16px font, unset min height) since the dense list was hard to
+## read at the old size.
+const PART_ROW_FONT_SIZE := 22
+const PART_ROW_MIN_HEIGHT := 48
 
 ## Set by Game_Manager before show_loadout() is called.
 @export var player_mech : mech
 
-@onready var stats_label: Label = $CenterContainer/PanelContainer/VBoxContainer/ContentRow/StatsColumn/StatsLabel
-@onready var parts_list: VBoxContainer = $CenterContainer/PanelContainer/VBoxContainer/ContentRow/PartsColumn/PartsScroll/PartsList
-@onready var start_match_button: Button = $CenterContainer/PanelContainer/VBoxContainer/ContentRow/RightColumn/LoadoutStartMatchButton
+@onready var stats_label: Label = $CenterContainer/PanelContainer/VBoxContainer/ContentRow/StatsColumn/StatsMargin/StatsLabel
+@onready var parts_list: VBoxContainer = $CenterContainer/PanelContainer/VBoxContainer/ContentRow/PartsColumn/PartsMargin/PartsScroll/PartsList
+@onready var start_match_button: Button = $CenterContainer/PanelContainer/VBoxContainer/ContentRow/RightColumn/RightMargin/RightVBox/LoadoutStartMatchButton
 
 
 func _ready():
@@ -73,23 +97,14 @@ func _display_name_for(part: Actions) -> String:
 	return part.resource_path.get_file().get_basename()
 
 
-## Scans PARTS_FOLDER for .tres resources whose script is Part (or a
-## subclass), so new parts show up automatically without touching the scene.
+## Loads every part in PART_PATHS whose resource is actually a Part (or a
+## subclass) — see PART_PATHS for why this isn't a runtime folder scan.
 func _scan_available_parts() -> Array[Part]:
 	var found : Array[Part] = []
-	var dir := DirAccess.open(PARTS_FOLDER)
-	if dir == null:
-		return found
-
-	dir.list_dir_begin()
-	var file_name := dir.get_next()
-	while file_name != "":
-		if file_name.ends_with(".tres"):
-			var res := load(PARTS_FOLDER + file_name)
-			if res is Part:
-				found.append(res)
-		file_name = dir.get_next()
-	dir.list_dir_end()
+	for file_name in PART_PATHS:
+		var res := load(PARTS_FOLDER + file_name)
+		if res is Part:
+			found.append(res)
 	return found
 
 
@@ -107,6 +122,7 @@ func refresh():
 	if available_parts.is_empty():
 		var empty_label := Label.new()
 		empty_label.text = "No parts found in %s" % PARTS_FOLDER
+		empty_label.add_theme_font_size_override("font_size", PART_ROW_FONT_SIZE)
 		parts_list.add_child(empty_label)
 	else:
 		for part in available_parts:
@@ -114,6 +130,8 @@ func refresh():
 			btn.text = _display_name_for(part)
 			btn.icon = _level_icon_for(part)
 			btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			btn.custom_minimum_size.y = PART_ROW_MIN_HEIGHT
+			btn.add_theme_font_size_override("font_size", PART_ROW_FONT_SIZE)
 			var already_equipped := player_mech.parts.has(part)
 			if already_equipped:
 				btn.text += " [equipped]"
@@ -123,6 +141,7 @@ func refresh():
 			btn.pressed.connect(_on_part_selected.bind(part))
 
 			var row := HBoxContainer.new()
+			row.add_theme_constant_override("separation", 12)
 			row.add_child(btn)
 			row.add_child(_action_type_badge_row(part))
 			if part.dice_count() > 0:
@@ -135,7 +154,7 @@ func refresh():
 func _level_icon_for(part: Part) -> Texture2D:
 	var key := "0"
 	if part.required_level > 0:
-		key = str(part.required_level) if part.exact_level_required else "x"
+		key = str(part.required_level)
 		if not LEVEL_ICONS.has(key):
 			key = "x"
 	return _get_resized_level_icon(key)
@@ -168,18 +187,22 @@ func _get_resized_action_type_icon(key: String) -> Texture2D:
 
 ## Row of badges for which action types a part grants: movement, melee or
 ## ranged attack (mutually exclusive, by the part's range), special (drone
-## deployment), block (push/pull).
+## deployment), block (Reaction — see Part.can_react). Push/pull isn't its
+## own badge — it's a bonus tacked onto an attack, not a standalone action.
 func _action_type_badge_row(part: Part) -> HBoxContainer:
 	var row := HBoxContainer.new()
 	var keys : Array[String] = []
 	if part.movement > 0:
 		keys.append("movement")
-	if part.dice_count() > 0:
+	if part.can_react:
+		keys.append("block")
+	elif part.dice_count() > 0:
+		# A can_react part is excluded from attack options (see
+		# mech.get_attack_action_for_range()), so its dice never mean melee/
+		# ranged here even if it happens to have dice fields set.
 		keys.append("ranged" if part.range > 1 else "melee")
 	if part.drone_type != null:
 		keys.append("special")
-	if part.push_pull != 0:
-		keys.append("block")
 
 	for key in keys:
 		var icon := _get_resized_action_type_icon(key)
@@ -224,7 +247,7 @@ func _build_stats_summary() -> String:
 	lines.append("Parts equipped: %d/%d" % [player_mech.parts.size(), mech.MAX_PARTS])
 	lines.append("HP: %d" % player_mech.max_hp)
 
-	var move_lines : Array[String] = ["  Basic Movement (built-in) — move 2"]
+	var move_lines : Array[String] = ["  Basic Movement (built-in) — move 3"]
 	var attack_lines : Array[String] = ["  Basic Attack (built-in) — range 1, 1 red"]
 	for part in player_mech.parts:
 		var req_text := _level_requirement_text(part)

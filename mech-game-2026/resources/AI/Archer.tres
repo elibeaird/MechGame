@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="AIBehavior" format=3]
+
+[ext_resource type="Script" path="res://scripts/AIBehavior.gd" id="1_aibehavior"]
+
+[resource]
+script = ExtResource("1_aibehavior")
+display_name = "Archer"
+target_priority = 3
+prefers_ranged = true
+keeps_distance = true
+retreat_hp_fraction = 0.0
+uses_special = false
+acts_randomly = false

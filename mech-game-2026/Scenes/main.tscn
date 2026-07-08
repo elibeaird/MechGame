@@ -1,117 +1,393 @@
 [gd_scene format=3 uid="uid://d08jcosw60a4a"]
 
 [ext_resource type="Script" uid="uid://5dss30bvatpu" path="res://scripts/Game_Manager.gd" id="1_bo1nx"]
-[ext_resource type="Resource" uid="uid://drpw66j5gdxg" path="res://resources/Levels/hill_arena.tres" id="2_6bp64"]
 [ext_resource type="PackedScene" uid="uid://y8o3ld63x6fs" path="res://Scenes/mech.tscn" id="2_8gbba"]
+[ext_resource type="Resource" uid="uid://crw624k6qlqgx" path="res://resources/Levels/Testing_arena.tres" id="2_ynf5e"]
 [ext_resource type="Script" uid="uid://dve8mgkmjhqqp" path="res://scripts/Part.gd" id="3_part"]
 [ext_resource type="Resource" uid="uid://cbergeohh5bht" path="res://resources/parts/WM-Aqua_Claw.tres" id="5_claw"]
 [ext_resource type="Resource" uid="uid://bj00v6q8ifn3y" path="res://resources/parts/WM-Aqua-Rech.tres" id="5_hptm8"]
 [ext_resource type="Resource" uid="uid://bsclvon7ebmxp" path="res://resources/parts/WM-Aqua_Bird.tres" id="5_ynf5e"]
 [ext_resource type="Script" uid="uid://cx76t3u32jflu" path="res://scripts/LoadoutScreen.gd" id="6_loadout"]
 [ext_resource type="Resource" uid="uid://cw4g1d72bnr84" path="res://resources/parts/WM-Aqua_Wave.tres" id="8_d1ilt"]
+[ext_resource type="Resource" path="res://resources/AI/Archer.tres" id="9_hptm8"]
+[ext_resource type="PackedScene" path="res://Scenes/connect_screen.tscn" id="10_connect"]
+[ext_resource type="Texture2D" uid="uid://c3j5hyymw2f82" path="res://images/ui/map_frame.png" id="20_frame"]
+[ext_resource type="Texture2D" uid="uid://dbm352boo4b67" path="res://images/ui/panel_move.png" id="21_panelmove"]
+[ext_resource type="Texture2D" uid="uid://ck47bsnyf3o57" path="res://images/ui/panel_second_action.png" id="22_panelsecond"]
+[ext_resource type="Texture2D" uid="uid://j8e044eyk005" path="res://images/ui/panel_end_turn.png" id="23_panelend"]
+[ext_resource type="Texture2D" uid="uid://dwiod118ugk3x" path="res://images/Action type/attack.png" id="24_iconattack"]
+[ext_resource type="Texture2D" uid="uid://b8ec5dhh2o6bq" path="res://images/Action type/move.png" id="25_iconmove"]
+[ext_resource type="Texture2D" uid="uid://dki27ego7axns" path="res://images/Action type/drone.png" id="26_iconspecial"]
+[ext_resource type="Texture2D" uid="uid://biwpb7lkirxuv" path="res://images/Action_lvl_icon/lvl_0.png" id="27_lvl0"]
+[ext_resource type="Texture2D" uid="uid://dwdlbnchptyn1" path="res://images/Action type/block.png" id="28_iconreact"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_attack"]
+bg_color = Color(0.55, 0.13, 0.13, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_move"]
+bg_color = Color(0.15, 0.45, 0.15, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_special"]
+bg_color = Color(0.82, 0.5, 0.12, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_react"]
+bg_color = Color(0.15, 0.35, 0.55, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_reset"]
+bg_color = Color(0.4, 0.4, 0.44, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_loadout_box"]
+bg_color = Color(0.13, 0.14, 0.17, 1)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.4, 0.43, 0.5, 1)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
 
 [node name="Main" type="Node2D" unique_id=256364714 node_paths=PackedStringArray("player_mech", "ai_mech")]
 script = ExtResource("1_bo1nx")
-player_mech = NodePath("player_mech")
-ai_mech = NodePath("ai_mech")
-level_map = ExtResource("2_6bp64")
-
-[node name="HexContainer" type="Node2D" parent="." unique_id=1418091569]
-
-[node name="Camera2D" type="Camera2D" parent="." unique_id=1567481253]
-
-[node name="player_mech" parent="." unique_id=429761759 instance=ExtResource("2_8gbba")]
-is_player = true
-hex_coord = Vector2i(1, 5)
-
-[node name="ai_mech" parent="." unique_id=1684661054 instance=ExtResource("2_8gbba")]
-parts = Array[ExtResource("3_part")]([ExtResource("5_hptm8"), ExtResource("5_ynf5e"), ExtResource("5_claw"), ExtResource("8_d1ilt")])
-hex_coord = Vector2i(8, 5)
-facing = 3
+player_mech = NodePath("UI/WorldViewportContainer/WorldViewport/player_mech")
+ai_mech = NodePath("UI/WorldViewportContainer/WorldViewport/ai_mech")
+level_map = ExtResource("2_ynf5e")
 
 [node name="UI" type="CanvasLayer" parent="." unique_id=802051713]
 
-[node name="MarginContainer" type="MarginContainer" parent="UI" unique_id=1507899182]
-offset_left = 23.0
-offset_top = 340.0
-offset_right = 340.0
-offset_bottom = 630.0
+[node name="WorldViewportContainer" type="SubViewportContainer" parent="UI" unique_id=-1283192775]
+offset_left = 422.0
+offset_top = 15.0
+offset_right = 1581.0
+offset_bottom = 713.0
+mouse_filter = 2
+stretch = true
 
-[node name="PanelContainer" type="PanelContainer" parent="UI/MarginContainer" unique_id=1650438120]
+[node name="WorldViewport" type="SubViewport" parent="UI/WorldViewportContainer" unique_id=-1283192774]
+handle_input_locally = false
+physics_object_picking = true
+size = Vector2i(1159, 698)
+render_target_update_mode = 4
+
+[node name="HexContainer" type="Node2D" parent="UI/WorldViewportContainer/WorldViewport" unique_id=1418091569]
+
+[node name="Camera2D" type="Camera2D" parent="UI/WorldViewportContainer/WorldViewport" unique_id=1567481253]
+
+[node name="player_mech" parent="UI/WorldViewportContainer/WorldViewport" unique_id=429761759 instance=ExtResource("2_8gbba")]
+is_player = true
+hex_coord = Vector2i(1, 5)
+
+[node name="ai_mech" parent="UI/WorldViewportContainer/WorldViewport" unique_id=1684661054 instance=ExtResource("2_8gbba")]
+parts = Array[ExtResource("3_part")]([ExtResource("5_hptm8"), ExtResource("5_ynf5e"), ExtResource("5_claw"), ExtResource("8_d1ilt")])
+hex_coord = Vector2i(8, 5)
+facing = 3
+ai_behavior = ExtResource("9_hptm8")
+
+[node name="FrameBackground" type="TextureRect" parent="UI" unique_id=756005615]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+texture = ExtResource("20_frame")
+expand_mode = 1
+
+[node name="MovePanel" type="Control" parent="UI" unique_id=1350744980]
+layout_mode = 3
+anchors_preset = 0
+offset_top = 8.0
+offset_right = 708.0
+offset_bottom = 297.0
+
+[node name="Background" type="NinePatchRect" parent="UI/MovePanel" unique_id=2136178016]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -33.0
+offset_right = -281.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("21_panelmove")
+patch_margin_left = 4
+patch_margin_top = 28
+patch_margin_right = 30
+patch_margin_bottom = 28
+
+[node name="Margin" type="MarginContainer" parent="UI/MovePanel" unique_id=1734078031]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -289.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 18
+theme_override_constants/margin_top = 22
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 22
+
+[node name="VBox" type="VBoxContainer" parent="UI/MovePanel/Margin" unique_id=362931188]
 layout_mode = 2
+theme_override_constants/separation = 12
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/MarginContainer/PanelContainer" unique_id=1884493799]
+[node name="MoveButton1" type="Button" parent="UI/MovePanel/Margin/VBox" unique_id=1425062778]
 layout_mode = 2
+size_flags_vertical = 3
+text = "MOVE"
 
-[node name="StatusLabel" type="Label" parent="UI/MarginContainer/PanelContainer/VBoxContainer" unique_id=655029339]
+[node name="SkipButton1" type="Button" parent="UI/MovePanel/Margin/VBox" unique_id=155673782]
+layout_mode = 2
+disabled = true
+text = "SKIP"
+
+[node name="SecondActionPanel" type="Control" parent="UI" unique_id=427010300]
+layout_mode = 3
+anchors_preset = 0
+offset_top = 301.0
+offset_right = 708.0
+offset_bottom = 665.0
+
+[node name="Background" type="NinePatchRect" parent="UI/SecondActionPanel" unique_id=1211771678]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -34.0
+offset_right = -282.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("22_panelsecond")
+patch_margin_left = 4
+patch_margin_top = 28
+patch_margin_right = 30
+patch_margin_bottom = 28
+
+[node name="Margin" type="MarginContainer" parent="UI/SecondActionPanel" unique_id=1588123726]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -303.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 18
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 20
+
+[node name="VBox" type="VBoxContainer" parent="UI/SecondActionPanel/Margin" unique_id=1277726565]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="RowsBox" type="VBoxContainer" parent="UI/SecondActionPanel/Margin/VBox" unique_id=2122742099]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 8
+
+[node name="AttackRow" type="HBoxContainer" parent="UI/SecondActionPanel/Margin/VBox/RowsBox" unique_id=816245483]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 12
+
+[node name="AttackLevelBadge" type="TextureRect" parent="UI/SecondActionPanel/Margin/VBox/RowsBox/AttackRow" unique_id=405209340]
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("27_lvl0")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="AttackButton" type="Button" parent="UI/SecondActionPanel/Margin/VBox/RowsBox/AttackRow" unique_id=1803265087]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_attack")
+text = "ATTACK"
+icon = ExtResource("24_iconattack")
+expand_icon = true
+
+[node name="MoveRow" type="HBoxContainer" parent="UI/SecondActionPanel/Margin/VBox/RowsBox" unique_id=1840612434]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 12
+
+[node name="MoveLevelBadge" type="TextureRect" parent="UI/SecondActionPanel/Margin/VBox/RowsBox/MoveRow" unique_id=1527995534]
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("27_lvl0")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="MoveButton2" type="Button" parent="UI/SecondActionPanel/Margin/VBox/RowsBox/MoveRow" unique_id=1112775087]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_move")
+text = "MOVE"
+icon = ExtResource("25_iconmove")
+expand_icon = true
+
+[node name="SpecialRow" type="HBoxContainer" parent="UI/SecondActionPanel/Margin/VBox/RowsBox" unique_id=1511902478]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 12
+
+[node name="SpecialLevelBadge" type="TextureRect" parent="UI/SecondActionPanel/Margin/VBox/RowsBox/SpecialRow" unique_id=2034640929]
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("27_lvl0")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="SpecialButton" type="Button" parent="UI/SecondActionPanel/Margin/VBox/RowsBox/SpecialRow" unique_id=1567869249]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_special")
+text = "SPECIAL"
+icon = ExtResource("26_iconspecial")
+expand_icon = true
+
+[node name="ReactRow" type="HBoxContainer" parent="UI/SecondActionPanel/Margin/VBox/RowsBox" unique_id=1323246282]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 12
+
+[node name="ReactLevelBadge" type="TextureRect" parent="UI/SecondActionPanel/Margin/VBox/RowsBox/ReactRow" unique_id=44224494]
+custom_minimum_size = Vector2(56, 56)
+layout_mode = 2
+size_flags_vertical = 4
+texture = ExtResource("27_lvl0")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ReactButton" type="Button" parent="UI/SecondActionPanel/Margin/VBox/RowsBox/ReactRow" unique_id=1694433415]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_styles/normal = SubResource("StyleBoxFlat_react")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_react")
+disabled = true
+text = "REACT"
+icon = ExtResource("28_iconreact")
+expand_icon = true
+
+[node name="ResetButton" type="Button" parent="UI/SecondActionPanel/Margin/VBox"]
+layout_mode = 2
+theme_override_styles/normal = SubResource("StyleBoxFlat_reset")
+text = "RESET (reorder actions)"
+
+[node name="SkipButton2" type="Button" parent="UI/SecondActionPanel/Margin/VBox" unique_id=766219021]
+layout_mode = 2
+disabled = true
+text = "SKIP"
+
+[node name="EndTurnPanel" type="Control" parent="UI" unique_id=690897355]
+layout_mode = 3
+anchors_preset = 0
+offset_top = 670.0
+offset_right = 708.0
+offset_bottom = 888.0
+
+[node name="Background" type="NinePatchRect" parent="UI/EndTurnPanel" unique_id=871394382]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -31.0
+offset_right = -285.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("23_panelend")
+patch_margin_left = 4
+patch_margin_top = 28
+patch_margin_right = 30
+patch_margin_bottom = 28
+
+[node name="Margin" type="MarginContainer" parent="UI/EndTurnPanel" unique_id=1554064063]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -314.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 18
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 30
+theme_override_constants/margin_bottom = 20
+
+[node name="EndTurnButton" type="Button" parent="UI/EndTurnPanel/Margin" unique_id=901699931]
+layout_mode = 2
+text = "END TURN"
+
+[node name="BottomBar" type="Control" parent="UI" unique_id=494383492]
+layout_mode = 3
+anchors_preset = 0
+offset_left = 422.0
+offset_top = 712.0
+offset_right = 1581.0
+offset_bottom = 900.0
+
+[node name="Margin" type="MarginContainer" parent="UI/BottomBar" unique_id=1682611241]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 299.0
+offset_top = 13.0
+offset_right = -8.0
+offset_bottom = -20.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 12
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 12
+
+[node name="VBox" type="VBoxContainer" parent="UI/BottomBar/Margin" unique_id=836476136]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="ScoreLabel" type="Label" parent="UI/BottomBar/Margin/VBox" unique_id=862099730]
+layout_mode = 2
+text = "You: 0   Enemy: 0   (first to 2 wins)"
+
+[node name="StatusLabel" type="Label" parent="UI/BottomBar/Margin/VBox" unique_id=135412500]
 layout_mode = 2
 text = "..."
 autowrap_mode = 2
 
-[node name="MovePointsLabel" type="Label" parent="UI/MarginContainer/PanelContainer/VBoxContainer" unique_id=969679959]
+[node name="MovePointsLabel" type="Label" parent="UI/BottomBar/Margin/VBox" unique_id=1394834096]
 visible = false
 layout_mode = 2
 text = "Movement left: 0"
 
-[node name="DiceRow" type="HBoxContainer" parent="UI/MarginContainer/PanelContainer/VBoxContainer" unique_id=1800153291]
+[node name="DiceRow" type="HBoxContainer" parent="UI/BottomBar/Margin/VBox" unique_id=2098951292]
 layout_mode = 2
-
-[node name="ActionColumns" type="HBoxContainer" parent="UI/MarginContainer/PanelContainer/VBoxContainer" unique_id=1045761810]
-layout_mode = 2
-
-[node name="FirstActionColumn" type="VBoxContainer" parent="UI/MarginContainer/PanelContainer/VBoxContainer/ActionColumns" unique_id=27816954]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="UI/MarginContainer/PanelContainer/VBoxContainer/ActionColumns/FirstActionColumn" unique_id=776053041]
-layout_mode = 2
-text = "1st Action"
-horizontal_alignment = 1
-
-[node name="MoveButton1" type="Button" parent="UI/MarginContainer/PanelContainer/VBoxContainer/ActionColumns/FirstActionColumn" unique_id=42632120]
-layout_mode = 2
-text = "Move"
-
-[node name="SecondActionColumn" type="VBoxContainer" parent="UI/MarginContainer/PanelContainer/VBoxContainer/ActionColumns" unique_id=2123661298]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="UI/MarginContainer/PanelContainer/VBoxContainer/ActionColumns/SecondActionColumn" unique_id=1915816970]
-layout_mode = 2
-text = "2nd Action"
-horizontal_alignment = 1
-
-[node name="MoveButton2" type="Button" parent="UI/MarginContainer/PanelContainer/VBoxContainer/ActionColumns/SecondActionColumn" unique_id=356303131]
-layout_mode = 2
-text = "Move"
-
-[node name="AttackButton" type="Button" parent="UI/MarginContainer/PanelContainer/VBoxContainer/ActionColumns/SecondActionColumn" unique_id=294206118]
-layout_mode = 2
-text = "Attack"
-
-[node name="SpecialButton" type="Button" parent="UI/MarginContainer/PanelContainer/VBoxContainer/ActionColumns/SecondActionColumn" unique_id=1821371954]
-layout_mode = 2
-text = "Special"
-
-[node name="EndTurnColumn" type="VBoxContainer" parent="UI/MarginContainer/PanelContainer/VBoxContainer/ActionColumns" unique_id=1450500606]
-layout_mode = 2
-
-[node name="Label" type="Label" parent="UI/MarginContainer/PanelContainer/VBoxContainer/ActionColumns/EndTurnColumn" unique_id=2067775865]
-layout_mode = 2
-text = "Turn"
-horizontal_alignment = 1
-
-[node name="EndTurnButton" type="Button" parent="UI/MarginContainer/PanelContainer/VBoxContainer/ActionColumns/EndTurnColumn" unique_id=1945609876]
-layout_mode = 2
-text = "End Turn"
-
-[node name="ReactButton" type="Button" parent="UI/MarginContainer/PanelContainer/VBoxContainer" unique_id=614893815]
-layout_mode = 2
-disabled = true
-text = "React"
-
-[node name="SkipMoveButton" type="Button" parent="UI/MarginContainer/PanelContainer/VBoxContainer" unique_id=1070815249]
-layout_mode = 2
-disabled = true
-text = "Skip Remaining Move"
 
 [node name="DroneActionPopup" type="PopupPanel" parent="UI" unique_id=1099059412]
 size = Vector2i(220, 180)
@@ -156,6 +432,42 @@ horizontal_alignment = 1
 [node name="WeaponList" type="VBoxContainer" parent="UI/AttackWeaponPopup/VBoxContainer" unique_id=1430792168]
 layout_mode = 2
 
+[node name="OverdrivePopup" type="PopupPanel" parent="UI"]
+size = Vector2i(260, 220)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/OverdrivePopup"]
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 256.0
+offset_bottom = 216.0
+
+[node name="TitleLabel" type="Label" parent="UI/OverdrivePopup/VBoxContainer"]
+layout_mode = 2
+text = "Choose an action to Overdrive"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="ActionList" type="VBoxContainer" parent="UI/OverdrivePopup/VBoxContainer"]
+layout_mode = 2
+
+[node name="ResetOrderPopup" type="PopupPanel" parent="UI"]
+size = Vector2i(260, 240)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/ResetOrderPopup"]
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 256.0
+offset_bottom = 236.0
+
+[node name="TitleLabel" type="Label" parent="UI/ResetOrderPopup/VBoxContainer"]
+layout_mode = 2
+text = "Click to rank, highest first"
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="ActionList" type="VBoxContainer" parent="UI/ResetOrderPopup/VBoxContainer"]
+layout_mode = 2
+
 [node name="LoadoutLayer" type="CanvasLayer" parent="." unique_id=1326255289]
 layer = 10
 script = ExtResource("6_loadout")
@@ -172,47 +484,84 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 
 [node name="PanelContainer" type="PanelContainer" parent="LoadoutLayer/CenterContainer" unique_id=2005604619]
-custom_minimum_size = Vector2(760, 520)
+custom_minimum_size = Vector2(1360, 820)
 layout_mode = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="LoadoutLayer/CenterContainer/PanelContainer" unique_id=2100188295]
 layout_mode = 2
+theme_override_constants/separation = 16
 
 [node name="TitleLabel" type="Label" parent="LoadoutLayer/CenterContainer/PanelContainer/VBoxContainer" unique_id=363050673]
 layout_mode = 2
+theme_override_font_sizes/font_size = 36
 text = "Build Your Loadout"
 horizontal_alignment = 1
 
 [node name="ContentRow" type="HBoxContainer" parent="LoadoutLayer/CenterContainer/PanelContainer/VBoxContainer" unique_id=1832633576]
 layout_mode = 2
+theme_override_constants/separation = 20
 
-[node name="StatsColumn" type="VBoxContainer" parent="LoadoutLayer/CenterContainer/PanelContainer/VBoxContainer/ContentRow" unique_id=1261463151]
-custom_minimum_size = Vector2(220, 0)
+[node name="StatsColumn" type="PanelContainer" parent="LoadoutLayer/CenterContainer/PanelContainer/VBoxContainer/ContentRow" unique_id=1261463151]
+custom_minimum_size = Vector2(320, 0)
 layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_loadout_box")
 
-[node name="StatsLabel" type="Label" parent="LoadoutLayer/CenterContainer/PanelContainer/VBoxContainer/ContentRow/StatsColumn" unique_id=864549160]
+[node name="StatsMargin" type="MarginContainer" parent="LoadoutLayer/CenterContainer/PanelContainer/VBoxContainer/ContentRow/StatsColumn" unique_id=221771942]
 layout_mode = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 14
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 14
+
+[node name="StatsLabel" type="Label" parent="LoadoutLayer/CenterContainer/PanelContainer/VBoxContainer/ContentRow/StatsColumn/StatsMargin" unique_id=864549160]
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
 text = "..."
 autowrap_mode = 2
 
-[node name="PartsColumn" type="VBoxContainer" parent="LoadoutLayer/CenterContainer/PanelContainer/VBoxContainer/ContentRow" unique_id=681127170]
+[node name="PartsColumn" type="PanelContainer" parent="LoadoutLayer/CenterContainer/PanelContainer/VBoxContainer/ContentRow" unique_id=681127170]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_loadout_box")
 
-[node name="PartsScroll" type="ScrollContainer" parent="LoadoutLayer/CenterContainer/PanelContainer/VBoxContainer/ContentRow/PartsColumn" unique_id=102807297]
-custom_minimum_size = Vector2(320, 280)
+[node name="PartsMargin" type="MarginContainer" parent="LoadoutLayer/CenterContainer/PanelContainer/VBoxContainer/ContentRow/PartsColumn" unique_id=1829852859]
+layout_mode = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 14
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 14
+
+[node name="PartsScroll" type="ScrollContainer" parent="LoadoutLayer/CenterContainer/PanelContainer/VBoxContainer/ContentRow/PartsColumn/PartsMargin" unique_id=102807297]
+custom_minimum_size = Vector2(560, 620)
 layout_mode = 2
 size_flags_vertical = 3
 
-[node name="PartsList" type="VBoxContainer" parent="LoadoutLayer/CenterContainer/PanelContainer/VBoxContainer/ContentRow/PartsColumn/PartsScroll" unique_id=1581121963]
+[node name="PartsList" type="VBoxContainer" parent="LoadoutLayer/CenterContainer/PanelContainer/VBoxContainer/ContentRow/PartsColumn/PartsMargin/PartsScroll" unique_id=1581121963]
 layout_mode = 2
 size_flags_horizontal = 3
+theme_override_constants/separation = 10
 
-[node name="RightColumn" type="VBoxContainer" parent="LoadoutLayer/CenterContainer/PanelContainer/VBoxContainer/ContentRow" unique_id=1946646683]
-custom_minimum_size = Vector2(160, 0)
+[node name="RightColumn" type="PanelContainer" parent="LoadoutLayer/CenterContainer/PanelContainer/VBoxContainer/ContentRow" unique_id=1946646683]
+custom_minimum_size = Vector2(260, 0)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_loadout_box")
+
+[node name="RightMargin" type="MarginContainer" parent="LoadoutLayer/CenterContainer/PanelContainer/VBoxContainer/ContentRow/RightColumn" unique_id=700756903]
+layout_mode = 2
+theme_override_constants/margin_left = 14
+theme_override_constants/margin_top = 14
+theme_override_constants/margin_right = 14
+theme_override_constants/margin_bottom = 14
+
+[node name="RightVBox" type="VBoxContainer" parent="LoadoutLayer/CenterContainer/PanelContainer/VBoxContainer/ContentRow/RightColumn/RightMargin" unique_id=1314939761]
 layout_mode = 2
 alignment = 1
 
-[node name="LoadoutStartMatchButton" type="Button" parent="LoadoutLayer/CenterContainer/PanelContainer/VBoxContainer/ContentRow/RightColumn" unique_id=1266428615]
+[node name="LoadoutStartMatchButton" type="Button" parent="LoadoutLayer/CenterContainer/PanelContainer/VBoxContainer/ContentRow/RightColumn/RightMargin/RightVBox" unique_id=1266428615]
+custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
+theme_override_font_sizes/font_size = 24
 text = "Start Match"
+
+[node name="ConnectLayer" parent="." unique_id=463950903 instance=ExtResource("10_connect")]
+visible = false

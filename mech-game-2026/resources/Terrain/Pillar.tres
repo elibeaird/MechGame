@@ -1,13 +1,13 @@
-[gd_resource type="Resource" script_class="TerrainType" format=3]
+[gd_resource type="Resource" script_class="TerrainType" format=3 uid="uid://duvyu6na168fm"]
 
-[ext_resource type="Script" path="res://scripts/TerrainType.gd" id="1_terraintype"]
+[ext_resource type="Script" uid="uid://1mabv3r8efli" path="res://scripts/TerrainType.gd" id="1_terraintype"]
 
 [resource]
 script = ExtResource("1_terraintype")
-display_name = "Swamp"
-color = Color(0.32, 0.34, 0.2, 1)
-difficulty = 2.0
-passable = true
-blocks_los = false
-breakable = false
-objective = false
+display_name = "Pillar"
+color = Color(0, 0, 0, 1)
+difficulty = 0
+passable = false
+blocks_los = true
+breakable = true
+Hp = 3

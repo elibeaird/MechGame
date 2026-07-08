@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "web-build",
+      "runtimeExecutable": "bash",
+      "runtimeArgs": ["-c", "cd /Volumes/Eli_2020/Godot/MechGame_Github/MechGame/mech-game-2026/build/web && exec python3 -m http.server 8060"],
+      "port": 8060
+    }
+  ]
+}

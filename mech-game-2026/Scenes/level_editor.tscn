@@ -1,0 +1,105 @@
+[gd_scene format=3 uid="uid://bl420dd5qrl01"]
+
+[ext_resource type="Script" uid="uid://kg161j5yb624" path="res://scripts/LevelEditor.gd" id="1_editor"]
+
+[node name="LevelEditor" type="Node2D" unique_id=207827718]
+script = ExtResource("1_editor")
+
+[node name="HexContainer" type="Node2D" parent="." unique_id=113078505]
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=915463014]
+
+[node name="UI" type="CanvasLayer" parent="." unique_id=1641232446]
+
+[node name="MarginContainer" type="MarginContainer" parent="UI" unique_id=1366705504]
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 460.0
+offset_bottom = 620.0
+
+[node name="PanelContainer" type="PanelContainer" parent="UI/MarginContainer" unique_id=151972045]
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/MarginContainer/PanelContainer" unique_id=627641002]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="UI/MarginContainer/PanelContainer/VBoxContainer" unique_id=54245074]
+layout_mode = 2
+text = "Level Editor"
+horizontal_alignment = 1
+
+[node name="GridSizeRow" type="HBoxContainer" parent="UI/MarginContainer/PanelContainer/VBoxContainer" unique_id=2029520216]
+layout_mode = 2
+
+[node name="WidthLabel" type="Label" parent="UI/MarginContainer/PanelContainer/VBoxContainer/GridSizeRow" unique_id=605804851]
+layout_mode = 2
+text = "W"
+
+[node name="WidthInput" type="LineEdit" parent="UI/MarginContainer/PanelContainer/VBoxContainer/GridSizeRow" unique_id=646638718]
+layout_mode = 2
+text = "10"
+
+[node name="HeightLabel" type="Label" parent="UI/MarginContainer/PanelContainer/VBoxContainer/GridSizeRow" unique_id=34537256]
+layout_mode = 2
+text = "H"
+
+[node name="HeightInput" type="LineEdit" parent="UI/MarginContainer/PanelContainer/VBoxContainer/GridSizeRow" unique_id=833616346]
+layout_mode = 2
+text = "11"
+
+[node name="NewGridButton" type="Button" parent="UI/MarginContainer/PanelContainer/VBoxContainer/GridSizeRow" unique_id=11633832]
+layout_mode = 2
+text = "New Grid"
+
+[node name="LoadSaveRow" type="HBoxContainer" parent="UI/MarginContainer/PanelContainer/VBoxContainer" unique_id=2042258303]
+layout_mode = 2
+
+[node name="LoadOption" type="OptionButton" parent="UI/MarginContainer/PanelContainer/VBoxContainer/LoadSaveRow" unique_id=1288422635]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="LoadButton" type="Button" parent="UI/MarginContainer/PanelContainer/VBoxContainer/LoadSaveRow" unique_id=913408798]
+layout_mode = 2
+text = "Load"
+
+[node name="FilenameInput" type="LineEdit" parent="UI/MarginContainer/PanelContainer/VBoxContainer/LoadSaveRow" unique_id=986157017]
+layout_mode = 2
+size_flags_horizontal = 3
+placeholder_text = "filename"
+
+[node name="SaveButton" type="Button" parent="UI/MarginContainer/PanelContainer/VBoxContainer/LoadSaveRow" unique_id=2002919015]
+layout_mode = 2
+text = "Save"
+
+[node name="SpawnRow" type="HBoxContainer" parent="UI/MarginContainer/PanelContainer/VBoxContainer" unique_id=252040524]
+layout_mode = 2
+
+[node name="SetPlayerSpawnButton" type="Button" parent="UI/MarginContainer/PanelContainer/VBoxContainer/SpawnRow" unique_id=1173314136]
+layout_mode = 2
+text = "Set Player Spawn"
+
+[node name="SetAiSpawnButton" type="Button" parent="UI/MarginContainer/PanelContainer/VBoxContainer/SpawnRow" unique_id=1006913672]
+layout_mode = 2
+text = "Set AI Spawn"
+
+[node name="ToggleForestButton" type="Button" parent="UI/MarginContainer/PanelContainer/VBoxContainer/SpawnRow" unique_id=663120866]
+layout_mode = 2
+text = "Toggle Forest"
+
+[node name="PaletteLabel" type="Label" parent="UI/MarginContainer/PanelContainer/VBoxContainer" unique_id=1240194512]
+layout_mode = 2
+text = "Terrain Palette (click to select, then click hexes)"
+autowrap_mode = 2
+
+[node name="PaletteScroll" type="ScrollContainer" parent="UI/MarginContainer/PanelContainer/VBoxContainer" unique_id=1079735501]
+custom_minimum_size = Vector2(420, 150)
+layout_mode = 2
+
+[node name="TerrainPalette" type="VBoxContainer" parent="UI/MarginContainer/PanelContainer/VBoxContainer/PaletteScroll" unique_id=1162644061]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="StatusLabel" type="Label" parent="UI/MarginContainer/PanelContainer/VBoxContainer" unique_id=894885647]
+layout_mode = 2
+text = "Pick a terrain, then click hexes to paint. Right-drag to pan, scroll to zoom."
+autowrap_mode = 2

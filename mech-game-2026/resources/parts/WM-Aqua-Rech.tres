@@ -6,8 +6,9 @@
 script = ExtResource("1_2dn77")
 max_drones = 0
 range = 5
-min_range = 2
+min_range = 3
 blue_dice = 1
+push_pull = 1
 required_level = 1
 dice_scale_with_level = true
 metadata/_custom_type_script = "uid://dve8mgkmjhqqp"

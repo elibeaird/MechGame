@@ -1,0 +1,75 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://scripts/ConnectScreen.gd" id="1_connect"]
+
+[node name="ConnectScreen" type="CanvasLayer"]
+layer = 20
+script = ExtResource("1_connect")
+
+[node name="Background" type="ColorRect" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.08, 0.09, 0.11, 1)
+
+[node name="CenterContainer" type="CenterContainer" parent="."]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="PanelContainer" type="PanelContainer" parent="CenterContainer"]
+custom_minimum_size = Vector2(420, 320)
+layout_mode = 2
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer/PanelContainer"]
+layout_mode = 2
+
+[node name="TitleLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+text = "Choose Match Type"
+horizontal_alignment = 1
+
+[node name="VsAiButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+text = "Play vs AI"
+
+[node name="HSeparator1" type="HSeparator" parent="CenterContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="VsPlayerLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+text = "Play vs Player (host runs a native build, joiner can use a browser)"
+autowrap_mode = 2
+
+[node name="HostRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="HostButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/HostRow"]
+layout_mode = 2
+text = "Host"
+
+[node name="PortLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer/HostRow"]
+layout_mode = 2
+text = "Port"
+
+[node name="PortInput" type="LineEdit" parent="CenterContainer/PanelContainer/VBoxContainer/HostRow"]
+layout_mode = 2
+text = "9080"
+size_flags_horizontal = 3
+
+[node name="JoinRow" type="HBoxContainer" parent="CenterContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+
+[node name="JoinButton" type="Button" parent="CenterContainer/PanelContainer/VBoxContainer/JoinRow"]
+layout_mode = 2
+text = "Join"
+
+[node name="AddressInput" type="LineEdit" parent="CenterContainer/PanelContainer/VBoxContainer/JoinRow"]
+layout_mode = 2
+placeholder_text = "host address"
+size_flags_horizontal = 3
+
+[node name="StatusLabel" type="Label" parent="CenterContainer/PanelContainer/VBoxContainer"]
+layout_mode = 2
+text = ""
+autowrap_mode = 2
