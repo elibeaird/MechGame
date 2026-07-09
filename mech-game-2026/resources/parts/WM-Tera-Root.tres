@@ -5,6 +5,7 @@
 [resource]
 script = ExtResource("1_okr8s")
 max_drones = 0
+display_level_tag = "2"
 movement = 4
 bonus_hp = 3
 required_level = 2

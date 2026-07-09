@@ -23,3 +23,12 @@ extends Actions
 ## part can't do both — one that can_react is excluded from attack options
 ## (see mech.get_attack_action_for_range()/get_available_attack_actions()).
 @export var can_react : bool = false
+
+## Overrides the loadout screen's level badge for this part (see
+## LoadoutScreen._level_icon_for()) instead of it being auto-derived from
+## required_level. "Auto" (default) keeps the existing behavior — no badge
+## if required_level is 0, else whichever of lvl_1/2/3/x matches — so
+## existing parts don't need to change. Purely cosmetic: gameplay eligibility
+## still comes from required_level/exact_level_required regardless of what's
+## picked here.
+@export_enum("Auto", "0", "1", "2", "3", "X") var display_level_tag : String = "Auto"

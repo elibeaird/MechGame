@@ -241,6 +241,22 @@ func _try_texture_bg(cell: HexCell) -> Node2D:
 	var sprite := Sprite2D.new()
 	sprite.texture = tex
 	sprite.name = "Bg"
+	# Custom terrain textures are typically authored at a much higher native
+	# resolution than a single hex's on-screen footprint, so draw them at
+	# native size otherwise (a texture_fn callback has no scale of its own
+	# to set, unlike a per-cell sprite node someone could hand-tune). Scaled
+	# uniformly (not stretched) to COVER the hex's bounding box — pointy-top
+	# hex width = size*sqrt(3), height = size*2 — using the larger of the two
+	# required ratios so there's no gap, even if that means slightly
+	# overflowing past the hex's angled corners (harmless: neighboring hexes
+	# draw over any overlap, same as the flat-color polygon fallback already
+	# implicitly relies on hex-to-hex layering).
+	var tex_size := tex.get_size()
+	if tex_size.x > 0.0 and tex_size.y > 0.0:
+		var hex_width := _hex_size * HexGrid.HEX_SQRT3
+		var hex_height := _hex_size * 2.0
+		var fit_scale : float = maxf(hex_width / tex_size.x, hex_height / tex_size.y)
+		sprite.scale = Vector2(fit_scale, fit_scale)
 	return sprite
 
 

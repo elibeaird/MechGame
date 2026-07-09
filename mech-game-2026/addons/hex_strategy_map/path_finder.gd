@@ -148,7 +148,11 @@ static func _search(
 ## Retorna Dictionary[Vector2i, float] con cada hex alcanzable y su costo acumulado.
 ## Hexes con costo > [param max_cost] quedan fuera del resultado.
 ## Pasar el resultado a find_path() para trazar el camino a un destino específico.
-static func find_reachable(origin: Vector2i, max_cost: float, grid: HexGrid) -> Dictionary:
+## [param ignore_terrain_cost]: true para una unidad voladora — cada hex
+## cuesta un 1.0 plano (más el edge_cost entre hexes, que sigue aplicando:
+## representa una barrera entre casillas, no la dificultad del terreno en sí)
+## en lugar de grid.get_movement_cost(to).
+static func find_reachable(origin: Vector2i, max_cost: float, grid: HexGrid, ignore_terrain_cost: bool = false) -> Dictionary:
 	if grid == null or not grid.is_valid(origin) or max_cost < 0.0:
 		return {}
 	var cfg := SearchConfig.new()
@@ -157,6 +161,8 @@ static func find_reachable(origin: Vector2i, max_cost: float, grid: HexGrid) -> 
 	cfg.should_exit = func(_c: Vector2i) -> bool: return false
 	cfg.priority_fn = func(_c: Vector2i, g: float) -> float: return g
 	cfg.max_cost = max_cost
+	if ignore_terrain_cost:
+		cfg.cost_fn = func(from: Vector2i, to: Vector2i) -> float: return 1.0 + grid.get_edge_cost(from, to)
 	return _search(origin, grid, cfg)
 
 
@@ -185,10 +191,14 @@ static func find_path(from: Vector2i, to: Vector2i, grid: HexGrid, reachable: Di
 ## Heurística admisible siempre que terrain_cost no se modifique a posteriori
 ## (el escalado se cachea en grid.min_passable_terrain_cost()).
 ## Retorna [] si no hay camino.
-static func find_path_astar(from: Vector2i, to: Vector2i, grid: HexGrid) -> Array[Vector2i]:
+## [param ignore_terrain_cost]: true para una unidad voladora — ver
+## find_reachable(). El heurístico también usa un h_scale plano de 1.0 en
+## ese caso (en vez de grid.min_passable_terrain_cost()) para seguir siendo
+## admisible contra el costo plano real que va a usar la búsqueda.
+static func find_path_astar(from: Vector2i, to: Vector2i, grid: HexGrid, ignore_terrain_cost: bool = false) -> Array[Vector2i]:
 	if not _validate_path_args_strict(from, to, grid):
 		return []
-	var h_scale := grid.min_passable_terrain_cost()
+	var h_scale := 1.0 if ignore_terrain_cost else grid.min_passable_terrain_cost()
 	var cube_to := HexGrid.offset_to_cube(to)
 	var cube_from := HexGrid.offset_to_cube(from)
 	var dq_sg := cube_from.x - cube_to.x
@@ -200,17 +210,20 @@ static func find_path_astar(from: Vector2i, to: Vector2i, grid: HexGrid) -> Arra
 			var dq_cg := cn.x - cube_to.x
 			var dr_cg := cn.z - cube_to.z
 			var cross: float = absf(float(dq_cg) * dr_sg - dq_sg * float(dr_cg))
-			return g + h + cross * ASTAR_TIEBREAK_CROSS)
+			return g + h + cross * ASTAR_TIEBREAK_CROSS,
+		ignore_terrain_cost)
 
 
 ## Núcleo compartido de find_path y find_path_astar. Solo difieren en neighbor_filter y priority_fn.
-static func _find_path_impl(from: Vector2i, to: Vector2i, grid: HexGrid, neighbor_filter: Callable, priority_fn: Callable) -> Array[Vector2i]:
+static func _find_path_impl(from: Vector2i, to: Vector2i, grid: HexGrid, neighbor_filter: Callable, priority_fn: Callable, ignore_terrain_cost: bool = false) -> Array[Vector2i]:
 	var came_from: Dictionary = {}
 	var cfg := SearchConfig.new()
 	cfg.neighbor_filter = neighbor_filter
 	cfg.on_better_path = func(n: Vector2i, c: Vector2i, _cost: float) -> void: came_from[n] = c
 	cfg.should_exit = func(c: Vector2i) -> bool: return c == to
 	cfg.priority_fn = priority_fn
+	if ignore_terrain_cost:
+		cfg.cost_fn = func(f: Vector2i, t: Vector2i) -> float: return 1.0 + grid.get_edge_cost(f, t)
 	_search(from, grid, cfg)
 	return _reconstruct_path(came_from, from, to)
 

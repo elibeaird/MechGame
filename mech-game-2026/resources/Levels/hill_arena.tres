@@ -1,10 +1,110 @@
-[gd_resource type="Resource" script_class="LevelMap" format=3 uid="uid://drpw66j5gdxg"]
+[gd_resource type="Resource" script_class="LevelMap" format=3 uid="uid://dhwhjgqbk41q8"]
 
 [ext_resource type="Script" uid="uid://ca6pxlw8klyc7" path="res://scripts/LevelMap.gd" id="1_7caeq"]
+[ext_resource type="Resource" uid="uid://csht3msfm5amx" path="res://resources/Terrain/platform.tres" id="2_rl5xt"]
+[ext_resource type="Resource" uid="uid://duvyu6na168fm" path="res://resources/Terrain/Pillar.tres" id="3_64u2v"]
+[ext_resource type="Resource" uid="uid://c1igwlnss8q1k" path="res://resources/Terrain/water.tres" id="4_uu3ge"]
 
 [resource]
 script = ExtResource("1_7caeq")
+grid_width = 8
+grid_height = 7
 player_spawn = Vector2i(0, 0)
-ai_spawn = Vector2i(8, 8)
-forest_tiles = Array[Vector2i]([Vector2i(0, 1), Vector2i(0, 4), Vector2i(0, 8), Vector2i(1, 0), Vector2i(1, 8), Vector2i(2, 2), Vector2i(2, 7), Vector2i(3, 4), Vector2i(4, 1), Vector2i(4, 3), Vector2i(4, 5), Vector2i(5, 0), Vector2i(5, 8), Vector2i(6, 4), Vector2i(6, 6), Vector2i(7, 4), Vector2i(7, 7), Vector2i(8, 2), Vector2i(9, 0), Vector2i(9, 4), Vector2i(9, 8), Vector2i(10, 1), Vector2i(10, 6), Vector2i(10, 8), Vector2i(0, 0)])
-metadata/_custom_type_script = "uid://ca6pxlw8klyc7"
+ai_spawn = Vector2i(7, 6)
+tile_overrides = Array[Dictionary]([{
+"coord": Vector2i(3, 3),
+"terrain": ExtResource("2_rl5xt")
+}, {
+"coord": Vector2i(3, 2),
+"terrain": ExtResource("2_rl5xt")
+}, {
+"coord": Vector2i(2, 3),
+"terrain": ExtResource("2_rl5xt")
+}, {
+"coord": Vector2i(3, 4),
+"terrain": ExtResource("2_rl5xt")
+}, {
+"coord": Vector2i(4, 4),
+"terrain": ExtResource("2_rl5xt")
+}, {
+"coord": Vector2i(4, 3),
+"terrain": ExtResource("2_rl5xt")
+}, {
+"coord": Vector2i(4, 2),
+"terrain": ExtResource("2_rl5xt")
+}, {
+"coord": Vector2i(2, 2),
+"terrain": ExtResource("3_64u2v")
+}, {
+"coord": Vector2i(3, 5),
+"terrain": ExtResource("3_64u2v")
+}, {
+"coord": Vector2i(3, 1),
+"terrain": ExtResource("4_uu3ge")
+}, {
+"coord": Vector2i(2, 1),
+"terrain": ExtResource("4_uu3ge")
+}, {
+"coord": Vector2i(1, 1),
+"terrain": ExtResource("4_uu3ge")
+}, {
+"coord": Vector2i(1, 2),
+"terrain": ExtResource("4_uu3ge")
+}, {
+"coord": Vector2i(1, 3),
+"terrain": ExtResource("4_uu3ge")
+}, {
+"coord": Vector2i(2, 4),
+"terrain": ExtResource("4_uu3ge")
+}, {
+"coord": Vector2i(2, 5),
+"terrain": ExtResource("4_uu3ge")
+}, {
+"coord": Vector2i(3, 6),
+"terrain": ExtResource("4_uu3ge")
+}, {
+"coord": Vector2i(4, 6),
+"terrain": ExtResource("4_uu3ge")
+}, {
+"coord": Vector2i(4, 5),
+"terrain": ExtResource("4_uu3ge")
+}, {
+"coord": Vector2i(5, 4),
+"terrain": ExtResource("4_uu3ge")
+}, {
+"coord": Vector2i(5, 3),
+"terrain": ExtResource("4_uu3ge")
+}, {
+"coord": Vector2i(6, 2),
+"terrain": ExtResource("4_uu3ge")
+}, {
+"coord": Vector2i(5, 1),
+"terrain": ExtResource("4_uu3ge")
+}, {
+"coord": Vector2i(4, 1),
+"terrain": ExtResource("4_uu3ge")
+}, {
+"coord": Vector2i(4, 0),
+"terrain": ExtResource("4_uu3ge")
+}, {
+"coord": Vector2i(6, 3),
+"terrain": ExtResource("4_uu3ge")
+}, {
+"coord": Vector2i(7, 3),
+"terrain": ExtResource("4_uu3ge")
+}, {
+"coord": Vector2i(0, 3),
+"terrain": ExtResource("4_uu3ge")
+}, {
+"coord": Vector2i(6, 5),
+"terrain": ExtResource("3_64u2v")
+}, {
+"coord": Vector2i(0, 5),
+"terrain": ExtResource("3_64u2v")
+}, {
+"coord": Vector2i(5, 2),
+"terrain": ExtResource("3_64u2v")
+}, {
+"coord": Vector2i(3, 0),
+"terrain": ExtResource("3_64u2v")
+}])

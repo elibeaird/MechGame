@@ -5,6 +5,7 @@
 [resource]
 script = ExtResource("1_qnu5c")
 max_drones = 0
+display_level_tag = "2"
 range = 1
 red_dice = 1
 blue_dice = 1

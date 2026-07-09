@@ -63,13 +63,22 @@ const HEALTH_BAR_WIDTH := 40.0
 @onready var _health_bar_fill: ColorRect = $HealthBarFill
 @onready var _facing_arrow: FacingArrow = $FacingArrow
 
-## 3 body sprites — right/upper_right/lower_right — the other 3 hex
-## directions reuse these mirrored (flip_h) rather than needing separate art.
-## See _DIRECTION_GROUPS/_DIRECTION_FLIPS and _update_body_sprite_for_facing().
+## 6 independent body sprites, one per hex direction — each has its own
+## SpriteFrames (see mech.tscn), so any of them can be repainted with real
+## art without affecting the others. The 3 "left" ones currently still
+## reuse their "right" counterpart's textures with flip_h baked in as a
+## placeholder (a static scene property now, not toggled in code), until
+## real distinct art replaces them. See _DIRECTION_GROUPS/
+## _update_body_sprite_for_facing().
 @onready var _body_right: AnimatedSprite2D = $BodyRight
 @onready var _body_upper_right: AnimatedSprite2D = $BodyUpperRight
 @onready var _body_lower_right: AnimatedSprite2D = $BodyLowerRight
-## Whichever of the 3 above is currently showing, based on facing — every
+@onready var _body_upper_left: AnimatedSprite2D = $BodyUpperLeft
+@onready var _body_left: AnimatedSprite2D = $BodyLeft
+@onready var _body_lower_left: AnimatedSprite2D = $BodyLowerLeft
+## All 6 above, keyed by _DIRECTION_GROUPS' names — built once in _ready().
+var _body_sprites_by_group : Dictionary = {}
+## Whichever of the 6 above is currently showing, based on facing — every
 ## play_*_animation() below just plays on this, so they don't need to care
 ## which direction is actually active.
 var _animated_sprite: AnimatedSprite2D
@@ -79,12 +88,9 @@ var _animated_sprite: AnimatedSprite2D
 ## play_attack_animation().
 @onready var _attack_effect: AnimatedSprite2D = $AttackEffect
 
-## Indexed by facing (0-5, matching HexDirections.DIRECTIONS). Directions
-## 2/3/4 (upper-left/left/lower-left) reuse direction 1/0/5's sprite
-## (upper-right/right/lower-right) horizontally flipped, instead of needing
-## 6 separate pieces of art.
-const _DIRECTION_GROUPS := ["right", "upper_right", "upper_right", "right", "lower_right", "lower_right"]
-const _DIRECTION_FLIPS := [false, false, true, true, true, false]
+## Indexed by facing (0-5, matching HexDirections.DIRECTIONS) — which of the
+## 6 _body_sprites_by_group entries that facing shows.
+const _DIRECTION_GROUPS := ["right", "upper_right", "upper_left", "left", "lower_left", "lower_right"]
 
 ## Every mech can always move 3 and melee-attack (1 red die, range 1), even
 ## with zero parts equipped — parts add on top of this, they never take it
@@ -108,22 +114,23 @@ func _ready():
 	_base_scale = scale
 	_update_health_bar()
 
-	# mech.tscn's 3 body sprites + attack effect are each SubResource-backed
+	_body_sprites_by_group = {
+		"right": _body_right, "upper_right": _body_upper_right, "lower_right": _body_lower_right,
+		"upper_left": _body_upper_left, "left": _body_left, "lower_left": _body_lower_left,
+	}
+
+	# mech.tscn's 6 body sprites + attack effect are each SubResource-backed
 	# SpriteFrames — shared by reference across every instance of this scene
 	# (both player_mech and ai_mech) unless duplicated here. Without this, a
 	# part's custom attack/move animation (copied in via play_*_animation()
 	# below) would leak onto whichever other mech happens to share this art.
-	_body_right.sprite_frames = _body_right.sprite_frames.duplicate(true)
-	_body_upper_right.sprite_frames = _body_upper_right.sprite_frames.duplicate(true)
-	_body_lower_right.sprite_frames = _body_lower_right.sprite_frames.duplicate(true)
+	for sprite: AnimatedSprite2D in _body_sprites_by_group.values():
+		sprite.sprite_frames = sprite.sprite_frames.duplicate(true)
+		sprite.animation_finished.connect(_on_body_animation_finished.bind(sprite))
+		sprite.visible = false
 	_attack_effect.sprite_frames = _attack_effect.sprite_frames.duplicate(true)
 
-	_body_right.animation_finished.connect(_on_body_animation_finished.bind(_body_right))
-	_body_upper_right.animation_finished.connect(_on_body_animation_finished.bind(_body_upper_right))
-	_body_lower_right.animation_finished.connect(_on_body_animation_finished.bind(_body_lower_right))
 	_animated_sprite = _body_right
-	_body_upper_right.visible = false
-	_body_lower_right.visible = false
 	_animated_sprite.visible = true
 	_play_idle()
 
@@ -177,14 +184,15 @@ func _update_facing_visual():
 	_facing_arrow.length = hex_size * 1.6
 	_update_body_sprite_for_facing()
 
-## Shows whichever of the 3 body sprites matches the current facing's
-## direction group, hides the other two, and flips it horizontally if this
-## facing is one of the mirrored ones. If the active sprite is actually
-## changing, carries over whatever animation was playing so switching
-## direction mid-idle/mid-move doesn't visibly reset it.
+## Shows whichever of the 6 body sprites matches the current facing, hides
+## the other five. If the active sprite is actually changing, carries over
+## whatever animation was playing so switching direction mid-idle/mid-move
+## doesn't visibly reset it. flip_h is a static per-sprite scene property
+## now (see mech.tscn), not toggled here — each direction owns its own
+## sprite instead of 3 directions sharing/mirroring another's.
 func _update_body_sprite_for_facing():
 	var group : String = _DIRECTION_GROUPS[facing]
-	var target : AnimatedSprite2D = _body_lower_right if group == "lower_right" else (_body_upper_right if group == "upper_right" else _body_right)
+	var target : AnimatedSprite2D = _body_sprites_by_group[group]
 
 	if target != _animated_sprite:
 		var current_anim : StringName = _animated_sprite.animation if _animated_sprite else &"idle"
@@ -197,8 +205,6 @@ func _update_body_sprite_for_facing():
 		_animated_sprite.play(current_anim)
 		if current_anim == "idle":
 			SpriteFramesUtil.sync_to_global_clock(_animated_sprite, "idle")
-
-	_animated_sprite.flip_h = _DIRECTION_FLIPS[facing]
 
 ## Equips a part, up to MAX_PARTS and no duplicates. A part's bonus_hp raises
 ## max_hp and heals by the same amount, so equipping never wastes the extra

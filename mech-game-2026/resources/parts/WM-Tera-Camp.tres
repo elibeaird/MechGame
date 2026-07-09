@@ -6,6 +6,7 @@
 script = ExtResource("1_i50yh")
 max_drones = 0
 can_react = true
+display_level_tag = "3"
 purple_dice = 1
 bonus_hp = 3
 required_level = 3

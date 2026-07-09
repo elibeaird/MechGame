@@ -83,9 +83,15 @@ var _custom_los_blocking_ids : Array[int] = []
 @onready var world_viewport: SubViewport = $UI/WorldViewportContainer/WorldViewport
 @onready var hex_container: Node2D = $UI/WorldViewportContainer/WorldViewport/HexContainer
 @onready var camera: Camera2D = $UI/WorldViewportContainer/WorldViewport/Camera2D
+## Briefly drawn between attacker and target for a ranged attack (range > 1)
+## — see _show_line_of_sight().
+@onready var line_of_sight_line: Line2D = $UI/WorldViewportContainer/WorldViewport/LineOfSightLine
 @onready var score_label: Label = $UI/BottomBar/Margin/VBox/ScoreLabel
 @onready var status_label: Label = $UI/BottomBar/Margin/VBox/StatusLabel
 @onready var move_points_label: Label = $UI/BottomBar/Margin/VBox/MovePointsLabel
+## The two panels a player's turn moves between — see _update_phase_highlight().
+@onready var move_panel: Control = $UI/MovePanel
+@onready var second_action_panel: Control = $UI/SecondActionPanel
 @onready var move_button_1: Button = $UI/MovePanel/Margin/VBox/MoveButton1
 @onready var move_button_2: Button = $UI/SecondActionPanel/Margin/VBox/RowsBox/MoveRow/MoveButton2
 @onready var attack_button: Button = $UI/SecondActionPanel/Margin/VBox/RowsBox/AttackRow/AttackButton
@@ -154,6 +160,11 @@ const OVERDRIVE_ICON_TEXTURES := {
 
 @onready var reset_order_popup: PopupPanel = $UI/ResetOrderPopup
 @onready var reset_order_action_list: VBoxContainer = $UI/ResetOrderPopup/VBoxContainer/ActionList
+
+@onready var match_event_popup: PopupPanel = $UI/MatchEventPopup
+@onready var match_event_title: Label = $UI/MatchEventPopup/VBoxContainer/TitleLabel
+@onready var match_event_message: Label = $UI/MatchEventPopup/VBoxContainer/MessageLabel
+@onready var match_event_ok_button: Button = $UI/MatchEventPopup/VBoxContainer/OkButton
 
 ## True once the match has started — Parts can only be equipped before this.
 var match_started : bool = false
@@ -237,6 +248,37 @@ var action_levels : Dictionary = {
 
 var game_over : bool = false
 
+## Keeps the last STATUS_HISTORY_SIZE status messages on screen at once
+## (newest last) instead of each one instantly overwriting the last — see
+## _set_status(). Persists for the whole match; never reset mid-game.
+const STATUS_HISTORY_SIZE := 3
+var _status_history : Array[String] = []
+
+
+## Appends text as a new status line and shows the last STATUS_HISTORY_SIZE
+## of them (oldest first, newest at the bottom) — replaces every direct
+## status_label.text assignment elsewhere in this file. A no-op if text is
+## identical to the most recent line, so an unrelated redundant update (e.g.
+## a network snapshot repeating the same message) doesn't duplicate it.
+func _set_status(text: String):
+	if not _status_history.is_empty() and _status_history[-1] == text:
+		return
+	_status_history.append(text)
+	if _status_history.size() > STATUS_HISTORY_SIZE:
+		_status_history = _status_history.slice(_status_history.size() - STATUS_HISTORY_SIZE)
+	status_label.text = "\n".join(_status_history)
+
+
+## Appends more text onto the MOST RECENT status line instead of starting a
+## new one — for messages that continue/annotate whatever was just shown
+## (e.g. the AI's Overdrive pick tacked onto its own respawn message).
+func _append_to_status(text: String):
+	if _status_history.is_empty():
+		_set_status(text)
+		return
+	_status_history[-1] += text
+	status_label.text = "\n".join(_status_history)
+
 
 func _ready():
 	if level_map == null:
@@ -254,6 +296,7 @@ func _ready():
 	move_button_2.pressed.connect(_on_move_pressed)
 	special_button.pressed.connect(_on_special_pressed)
 	reset_button.pressed.connect(_on_reset_pressed)
+	match_event_ok_button.pressed.connect(match_event_popup.hide)
 	end_turn_button.pressed.connect(_on_end_turn_pressed)
 	skip_move_button.pressed.connect(_on_skip_move_pressed)
 	skip_move_button_2.pressed.connect(_on_skip_move_pressed)
@@ -277,6 +320,9 @@ func _ready():
 	player_mech.spawn_facing = player_mech.facing
 	ai_mech.spawn_hex_coord = ai_mech.hex_coord
 	ai_mech.spawn_facing = ai_mech.facing
+
+	_move_panel_rest_x = move_panel.position.x
+	_second_action_panel_rest_x = second_action_panel.position.x
 
 	_update_action_level_labels()
 	_update_score_label()
@@ -467,7 +513,8 @@ func _enter_loadout_phase():
 	special_button.disabled = true
 	reset_button.disabled = true
 	end_turn_button.disabled = true
-	status_label.text = "Equip parts, then click Start Match"
+	_update_phase_highlight()
+	_set_status("Equip parts, then click Start Match")
 	# The joining client builds their loadout on ai_mech, which may carry
 	# fixed parts meant for solo vs-AI mode (see main.tscn) — start it blank
 	# so player 2 gets the same empty slate player_mech always has.
@@ -486,14 +533,14 @@ func _on_loadout_finished():
 
 	if NetworkManager.am_i_host():
 		_host_loadout_ready = true
-		status_label.text = "Waiting for the other player to finish their loadout..."
+		_set_status("Waiting for the other player to finish their loadout...")
 		_maybe_start_networked_match()
 	else:
 		var paths : Array[String] = []
 		for part in ai_mech.parts:
 			paths.append(part.resource_path)
 		_rpc_sync_client_parts.rpc_id(1, paths)
-		status_label.text = "Waiting for the host to start the match..."
+		_set_status("Waiting for the host to start the match...")
 
 
 ## Host-only: receives the joining client's final loadout (as resource
@@ -595,7 +642,7 @@ func next_turn ():
 	elif current_mech.is_player:
 		actions_used = 0
 		_update_action_buttons()
-		status_label.text = "Your turn — move up to 3 hexes"
+		_set_status("Your turn — move up to 3 hexes")
 	else:
 		attack_button.disabled = true
 		move_button_1.disabled = true
@@ -605,11 +652,48 @@ func next_turn ():
 		end_turn_button.disabled = true
 		skip_move_button.disabled = true
 		skip_move_button_2.disabled = true
-		status_label.text = "Enemy turn..."
+		_update_phase_highlight()
+		_set_status("Enemy turn...")
 		await get_tree().create_timer(randf_range(0.5, 1.0)).timeout
 		var attacked := _ai_take_turn()
 		await get_tree().create_timer(3.4 if attacked else 0.4).timeout
 		next_turn()
+
+
+## How far right a panel shifts to highlight it as the local player's current
+## phase — see _update_phase_highlight().
+const PHASE_HIGHLIGHT_OFFSET := 24.0
+## Rest (unhighlighted) x position of each panel — captured once in _ready()
+## from whatever main.tscn actually authored them at, rather than assumed.
+var _move_panel_rest_x : float = 0.0
+var _second_action_panel_rest_x : float = 0.0
+## In-flight slide tweens, so a rapid state change (e.g. clicking through a
+## move quickly) retargets the same tween instead of fighting a stale one.
+var _move_panel_tween : Tween
+var _second_action_panel_tween : Tween
+
+
+## Slides move_panel right while it's the local player's 1st-action phase
+## (actions_used == 0), or second_action_panel right during the 2nd-action
+## phase (actions_used >= 1) — whichever isn't current (or if it's not the
+## local player's turn at all, or the match is over) eases back to rest.
+func _update_phase_highlight():
+	var my_turn := current_mech == _my_mech() and not game_over
+	var move_target := _move_panel_rest_x + PHASE_HIGHLIGHT_OFFSET if my_turn and actions_used == 0 else _move_panel_rest_x
+	var second_target := _second_action_panel_rest_x + PHASE_HIGHLIGHT_OFFSET if my_turn and actions_used >= 1 else _second_action_panel_rest_x
+	_move_panel_tween = _slide_panel_x(move_panel, move_target, _move_panel_tween)
+	_second_action_panel_tween = _slide_panel_x(second_action_panel, second_target, _second_action_panel_tween)
+
+
+## Eases panel's x position to target_x, replacing prior_tween (killing it
+## first if it's still running) so repeated calls retarget smoothly instead
+## of stacking competing tweens on the same property.
+func _slide_panel_x(panel: Control, target_x: float, prior_tween: Tween) -> Tween:
+	if prior_tween and prior_tween.is_valid():
+		prior_tween.kill()
+	var tween := create_tween()
+	tween.tween_property(panel, "position:x", target_x, 0.15).set_trans(Tween.TRANS_SINE).set_ease(Tween.EASE_OUT)
+	return tween
 
 
 ## Slot 0 (actions_used == 0) only allows the 1st-action Move. Slot 1 unlocks
@@ -628,6 +712,7 @@ func _update_action_buttons():
 		# drones_deployed etc. are all singular/player-1-only) — keep it
 		# hidden from player 2 rather than letting them hit a broken path.
 		special_button.disabled = true
+	_update_phase_highlight()
 
 
 ## Shows/hides this peer's own action buttons based on whether it's actually
@@ -636,7 +721,7 @@ func _update_action_buttons():
 func _apply_turn_ui():
 	if current_mech == _my_mech() and not game_over:
 		_update_action_buttons()
-		status_label.text = "Your turn — move up to 3 hexes"
+		_set_status("Your turn — move up to 3 hexes")
 	else:
 		attack_button.disabled = true
 		move_button_1.disabled = true
@@ -646,8 +731,9 @@ func _apply_turn_ui():
 		end_turn_button.disabled = true
 		skip_move_button.disabled = true
 		skip_move_button_2.disabled = true
+		_update_phase_highlight()
 		if not game_over:
-			status_label.text = "Waiting for the other player's turn..."
+			_set_status("Waiting for the other player's turn...")
 
 
 func _use_action_slot():
@@ -656,7 +742,7 @@ func _use_action_slot():
 		next_turn()
 	else:
 		_update_action_buttons()
-		status_label.text = "Choose your second action: Move, Attack, Special, or Reset"
+		_set_status("Choose your second action: Move, Attack, Special, or Reset")
 
 
 ## Drops used_key to 0 and shifts every key that was ranked below it up by
@@ -740,6 +826,7 @@ func _check_game_over() -> bool:
 		end_turn_button.disabled = true
 		skip_move_button.disabled = true
 		skip_move_button_2.disabled = true
+		_update_phase_highlight()
 	_update_score_label()
 	return game_over
 
@@ -755,16 +842,63 @@ func _score_kill(killer: mech, victim: mech):
 		ai_score += 1
 
 	if killer_is_player and player_score >= WINNING_SCORE:
-		status_label.text = "Victory! You win %d-%d." % [player_score, ai_score]
+		_set_status("Victory! You win %d-%d." % [player_score, ai_score])
 		game_over = true
 	elif not killer_is_player and ai_score >= WINNING_SCORE:
-		status_label.text = "Defeat! The enemy mech wins %d-%d." % [ai_score, player_score]
+		_set_status("Defeat! The enemy mech wins %d-%d." % [ai_score, player_score])
 		game_over = true
 	else:
 		victim.respawn()
 		var who := "Your" if victim == player_mech else "The enemy"
-		status_label.text = "%s mech was destroyed! Score: you %d — enemy %d." % [who, player_score, ai_score]
+		_set_status("%s mech was destroyed! Score: you %d — enemy %d." % [who, player_score, ai_score])
 		_handle_respawn_overdrive(victim)
+		# Drones are player-only (the AI never deploys any — see
+		# get_drone_type()/_ai_take_turn()) and drones_deployed otherwise
+		# never resets mid-match, so a respawn is the one moment that gives
+		# the player's drone budget back — dying already cost them a point.
+		if victim == player_mech and drones_deployed > 0:
+			drones_deployed = 0
+			_append_to_status(" Your drone deployments have been refreshed!")
+
+	_notify_match_event(killer, victim)
+
+
+## Shows (or, over the network, tells the affected peer to show) a popup for
+## a win or a loss — the terminal, game_over outcomes only. The mid-match
+## "defeated, about to respawn" case isn't handled here: it's folded into
+## the Overdrive popup instead (see _handle_respawn_overdrive()), since that
+## already pops up right after every respawn and showing both at once just
+## covers one with the other. Only this peer's own mech's outcome is shown
+## locally (the host always sees player_mech's — the AI winning isn't shown
+## as a popup, only the score label/status text cover that).
+func _notify_match_event(killer: mech, victim: mech):
+	if not game_over:
+		return
+	var host_won := killer == player_mech
+	if host_won:
+		_show_match_event_popup("VICTORY!", "You win %d-%d." % [player_score, ai_score])
+	else:
+		_show_match_event_popup("DEFEAT", "The enemy wins %d-%d." % [ai_score, player_score])
+	if NetworkManager.is_networked():
+		_rpc_notify_client_match_event.rpc_id(ai_mech_owner_peer_id, "lost" if host_won else "won", ai_score, player_score)
+
+
+## Received only by the joining client — see _notify_match_event(). my_score/
+## enemy_score are already from the client's own perspective (ai_score/
+## player_score swapped), not the host's.
+@rpc("authority", "call_remote", "reliable")
+func _rpc_notify_client_match_event(event: String, my_score: int, enemy_score: int):
+	match event:
+		"won":
+			_show_match_event_popup("VICTORY!", "You win %d-%d." % [my_score, enemy_score])
+		"lost":
+			_show_match_event_popup("DEFEAT", "The enemy wins %d-%d." % [enemy_score, my_score])
+
+
+func _show_match_event_popup(title: String, message: String):
+	match_event_title.text = title
+	match_event_message.text = message
+	match_event_popup.popup_centered()
 
 
 func _update_score_label():
@@ -801,15 +935,19 @@ func _ai_choose_overdrive(m: mech):
 		return
 	var key : String = "attack" if available.has("attack") else available[0]
 	m.add_overdrive(key)
-	status_label.text += " The enemy mech gained Overdrive on %s!" % OVERDRIVE_LABELS[key]
+	_append_to_status(" The enemy mech gained Overdrive on %s!" % OVERDRIVE_LABELS[key])
 
 
 ## Shows the Overdrive choice popup for m — always the LOCAL peer's own mech
 ## (the host's player_mech, or a client's own ai_mech) — letting them grant
-## Overdrive to one action m doesn't already have it on. No-op if every
-## action is already claimed. Special is left off the list for a networked
-## player 2 (ai_mech) since Special/drones aren't wired for 2-player matches
-## at all (see _update_action_buttons()).
+## Overdrive to one action m doesn't already have it on. This is always shown
+## right after m respawns (see _handle_respawn_overdrive()), so its title
+## doubles as the "you were destroyed" notice — no separate popup for that.
+## If every action is already claimed, falls back to the plain match-event
+## "DEFEATED" popup instead, so a respawn still gets acknowledged somehow.
+## Special is left off the list for a networked player 2 (ai_mech) since
+## Special/drones aren't wired for 2-player matches at all (see
+## _update_action_buttons()).
 func _prompt_overdrive_choice(m: mech):
 	var available : Array[String] = []
 	for key in SECOND_ACTION_KEYS:
@@ -818,6 +956,7 @@ func _prompt_overdrive_choice(m: mech):
 		if not m.overdrive_actions.has(key):
 			available.append(key)
 	if available.is_empty():
+		_show_match_event_popup("DEFEATED", "Your mech was destroyed — respawning...")
 		return
 
 	_overdrive_prompt_mech = m
@@ -845,7 +984,7 @@ func _on_overdrive_choice(key: String):
 		return
 
 	m.add_overdrive(key)
-	status_label.text = "%s granted Overdrive on %s!" % ["Your mech" if m == player_mech else "The enemy mech", OVERDRIVE_LABELS[key]]
+	_set_status("%s granted Overdrive on %s!" % ["Your mech" if m == player_mech else "The enemy mech", OVERDRIVE_LABELS[key]])
 	_update_action_level_labels()
 	if NetworkManager.is_networked():
 		_broadcast_state()
@@ -861,7 +1000,7 @@ func _rpc_request_overdrive_choice(key: String):
 	if multiplayer.get_remote_sender_id() != ai_mech_owner_peer_id:
 		return
 	ai_mech.add_overdrive(key)
-	status_label.text = "The enemy mech granted Overdrive on %s!" % OVERDRIVE_LABELS[key]
+	_set_status("The enemy mech granted Overdrive on %s!" % OVERDRIVE_LABELS[key])
 	_broadcast_state()
 
 
@@ -883,6 +1022,28 @@ func _react_level_for(target) -> int:
 	if target is mech:
 		return target.get_effective_level("react", action_levels["react"])
 	return action_levels["react"]
+
+
+## How long the line-of-sight line stays visible after a ranged attack —
+## roughly matches the built-in ranged_attack flourish's own length (3
+## frames @ 8fps ≈ 0.4s) so it reads as part of that same hit, not a
+## separate effect.
+const LOS_LINE_DURATION := 0.5
+var _los_line_tween : Tween
+
+## Briefly draws a line between from and to (world positions) — call for any
+## ranged attack (action.range > 1) right after it resolves, alongside the
+## normal attack flourish. Re-calling before the previous line has hidden
+## (e.g. an AOE hitting several targets in a row) retargets the same line
+## and restarts its hide timer, rather than stacking multiple lines.
+func _show_line_of_sight(from: Vector2, to: Vector2):
+	line_of_sight_line.points = PackedVector2Array([from, to])
+	line_of_sight_line.visible = true
+	if _los_line_tween and _los_line_tween.is_valid():
+		_los_line_tween.kill()
+	_los_line_tween = create_tween()
+	_los_line_tween.tween_interval(LOS_LINE_DURATION)
+	_los_line_tween.tween_callback(func(): line_of_sight_line.visible = false)
 
 
 ## Alternative 2nd action: instead of Move/Attack/Special, spend the slot to
@@ -933,7 +1094,7 @@ func _on_reset_order_pick(key: String):
 func _finish_reset_order(order: Array[String]):
 	if NetworkManager.is_networked() and not NetworkManager.am_i_host():
 		_rpc_request_reset_order.rpc_id(1, order)
-		status_label.text = "Reordering — waiting to sync..."
+		_set_status("Reordering — waiting to sync...")
 		return
 	_apply_reset_order(order)
 
@@ -963,7 +1124,7 @@ func _apply_reset_order(order: Array[String]):
 	for i in order.size():
 		action_levels[order[i]] = order.size() - 1 - i
 	var labels := order.map(func(k): return OVERDRIVE_LABELS[k])
-	status_label.text = "%s reordered actions: %s" % ["You" if current_mech == player_mech else "The enemy", ", ".join(labels)]
+	_set_status("%s reordered actions: %s" % ["You" if current_mech == player_mech else "The enemy", ", ".join(labels)])
 	_update_action_level_labels()
 	_clear_pending()
 	_use_action_slot()
@@ -1006,7 +1167,7 @@ func _start_move() -> bool:
 	var move_level := current_mech.get_effective_level("move", action_levels["move"])
 	var move_action := current_mech.get_move_action(move_level)
 	if move_action == null:
-		status_label.text = "No equipped movement part meets your current Move level (Lv %d)" % move_level
+		_set_status("No equipped movement part meets your current Move level (Lv %d)" % move_level)
 		return false
 	current_move_action = move_action
 	move_points_remaining = move_action.movement
@@ -1038,6 +1199,7 @@ func _disable_buttons_during_move():
 	end_turn_button.disabled = true
 	skip_move_button.disabled = false
 	skip_move_button_2.disabled = false
+	_update_phase_highlight()
 
 
 func _on_skip_move_pressed():
@@ -1131,7 +1293,7 @@ func _refresh_move_highlight():
 	var hint := "Green = move forward, yellow = rotate that way"
 	if has_ram:
 		hint = "Orange = ram the enemy and take its place (costs %d), yellow = rotate" % RAM_COST
-	status_label.text = "%s — click Skip to stop early" % hint
+	_set_status("%s — click Skip to stop early" % hint)
 
 	move_points_label.visible = true
 	move_points_label.text = "Movement left: %d" % move_points_remaining
@@ -1207,10 +1369,10 @@ func _targets_hit_by(attacker: mech, action: Actions) -> Array:
 
 
 ## Rolls attacker's is_aoe action against every target _targets_hit_by finds —
-## each target takes its own separate roll and push/pull, but all the dice
-## show together and the status line summarizes every hit in one message.
-## Returns true if any target's Reaction fired, so the caller can also
-## rotate "react" (in a separate call, after "attack") when it did.
+## each target takes its own separate roll, but all the dice show together
+## and the status line summarizes every hit in one message. Returns true if
+## any target's Reaction fired, so the caller can also rotate "react" (in a
+## separate call, after "attack") when it did.
 func _resolve_aoe_attack(attacker: mech, action: Actions, current_level: int) -> bool:
 	var targets := _targets_hit_by(attacker, action)
 	var all_hits : Array[int] = []
@@ -1219,18 +1381,19 @@ func _resolve_aoe_attack(attacker: mech, action: Actions, current_level: int) ->
 	var any_reaction := false
 	for target in targets:
 		var result := attacker.attack(target, action, current_level, _react_level_for(target))
-		var moved := _apply_push_pull(attacker.hex_coord, target, action.push_pull)
+		if action.range > 1:
+			_show_line_of_sight(attacker.global_position, target.global_position)
 		all_hits.append_array(result.hits)
 		all_colors.append_array(result.colors)
 		var reaction_suffix := " (%s's Reaction blocked %d damage!)" % [result.reaction_part_name, result.reaction_reduction] if result.reaction_used else ""
-		lines.append("%s for %d damage%s%s" % [_target_label(target), result.damage, _push_pull_suffix(action.push_pull, moved), reaction_suffix])
+		lines.append("%s for %d damage%s" % [_target_label(target), result.damage, reaction_suffix])
 		any_reaction = any_reaction or result.reaction_used
 	_show_dice(all_hits, all_colors)
 	var who := "You hit" if attacker == player_mech else "Enemy hit"
 	if lines.is_empty():
-		status_label.text = "%s nothing — no targets in range" % who
+		_set_status("%s nothing — no targets in range" % who)
 	else:
-		status_label.text = "%s %s!" % [who, ", ".join(lines)]
+		_set_status("%s %s!" % [who, ", ".join(lines)])
 	return any_reaction
 
 
@@ -1244,19 +1407,19 @@ func _on_attack_pressed():
 	var enemy := _opponent_of(current_mech)
 	var dist := HexGrid.distance(current_mech.hex_coord, enemy.hex_coord)
 	if current_mech.get_attack_action_for_range(dist) == null:
-		status_label.text = "Enemy is out of range"
+		_set_status("Enemy is out of range")
 		return
 	if not _is_in_front_arc(current_mech, enemy.hex_coord):
-		status_label.text = "Enemy is outside your front arc — rotate to face them"
+		_set_status("Enemy is outside your front arc — rotate to face them")
 		return
 	if not _has_line_of_sight(current_mech.hex_coord, enemy.hex_coord):
-		status_label.text = "No line of sight to the enemy — something's blocking your shot"
+		_set_status("No line of sight to the enemy — something's blocking your shot")
 		return
 
 	var attack_level_for_options := current_mech.get_effective_level("attack", action_levels["attack"])
 	var options := current_mech.get_available_attack_actions(dist, attack_level_for_options)
 	if options.is_empty():
-		status_label.text = "No equipped attack meets your current Attack level (Lv %d)" % attack_level_for_options
+		_set_status("No equipped attack meets your current Attack level (Lv %d)" % attack_level_for_options)
 		return
 
 	for child in attack_weapon_list.get_children():
@@ -1295,7 +1458,7 @@ func _start_attack(action: Actions):
 	pending_mode = PendingMode.ATTACK
 	var enemy := _opponent_of(current_mech)
 	renderer.update_reachable_highlight(hex_container, grid, {enemy.hex_coord: true}, highlighted_hexes)
-	status_label.text = "Click the enemy to attack with %s" % _attack_action_name(action)
+	_set_status("Click the enemy to attack with %s" % _attack_action_name(action))
 
 
 ## The RPC target the client calls to tell the host which attack it chose —
@@ -1335,7 +1498,7 @@ func _on_special_pressed():
 		return
 	var special_level := player_mech.get_effective_level("special", action_levels["special"])
 	if special_level <= 0:
-		status_label.text = "Special is at Lv 0 — no drone actions available"
+		_set_status("Special is at Lv 0 — no drone actions available")
 		return
 	special_chain_remaining = special_level
 	special_chain_active = false
@@ -1355,7 +1518,7 @@ func _prompt_special_action():
 	var can_deploy := drone_type != null and drones_deployed < player_mech.get_max_drones()
 
 	if player_drones.is_empty() and not can_deploy:
-		status_label.text = "No equipped part grants a drone" if drone_type == null else "No drones remaining (%d/%d deployed)" % [drones_deployed, player_mech.get_max_drones()]
+		_set_status("No equipped part grants a drone" if drone_type == null else "No drones remaining (%d/%d deployed)" % [drones_deployed, player_mech.get_max_drones()])
 		if special_chain_active:
 			_finish_special_use()
 		return
@@ -1377,13 +1540,13 @@ func _prompt_special_action():
 		hint_parts.append("click an empty adjacent hex to deploy a drone")
 	if not player_drones.is_empty():
 		hint_parts.append("click one of your drones to control it")
-	status_label.text = "%s (%d drone action(s) left)" % [", ".join(hint_parts), special_chain_remaining]
+	_set_status("%s (%d drone action(s) left)" % [", ".join(hint_parts), special_chain_remaining])
 
 
 ## Opens the move/attack/crash popup for whichever drone was just selected.
 func _open_drone_popup():
 	var dist_to_enemy := HexGrid.distance(selected_drone.hex_coord, ai_mech.hex_coord)
-	var move_reachable := PathFinder.find_reachable(selected_drone.hex_coord, float(selected_drone.drone_type.movement), grid)
+	var move_reachable := PathFinder.find_reachable(selected_drone.hex_coord, float(selected_drone.drone_type.movement), grid, selected_drone.drone_type.flight)
 	move_reachable.erase(selected_drone.hex_coord)
 	move_reachable.erase(player_mech.hex_coord)
 	move_reachable.erase(ai_mech.hex_coord)
@@ -1422,14 +1585,14 @@ func _on_drone_move_chosen():
 	pending_mode = PendingMode.SPECIAL
 	drone_sub_action = "move"
 
-	reachable = PathFinder.find_reachable(selected_drone.hex_coord, float(selected_drone.drone_type.movement), grid)
+	reachable = PathFinder.find_reachable(selected_drone.hex_coord, float(selected_drone.drone_type.movement), grid, selected_drone.drone_type.flight)
 	reachable.erase(selected_drone.hex_coord)
 	reachable.erase(player_mech.hex_coord)
 	reachable.erase(ai_mech.hex_coord)
 	for d in player_drones:
 		reachable.erase(d.hex_coord)
 	renderer.update_reachable_highlight(hex_container, grid, reachable, highlighted_hexes)
-	status_label.text = "Click a hex to move the drone (%d drone action(s) left)" % special_chain_remaining
+	_set_status("Click a hex to move the drone (%d drone action(s) left)" % special_chain_remaining)
 
 
 func _on_drone_attack_chosen():
@@ -1439,7 +1602,7 @@ func _on_drone_attack_chosen():
 
 	reachable = {}
 	renderer.update_reachable_highlight(hex_container, grid, {ai_mech.hex_coord: true}, highlighted_hexes)
-	status_label.text = "Click the enemy to attack with your drone (%d drone action(s) left)" % special_chain_remaining
+	_set_status("Click the enemy to attack with your drone (%d drone action(s) left)" % special_chain_remaining)
 
 
 func _on_drone_crash_chosen():
@@ -1454,7 +1617,7 @@ func _on_drone_crash_chosen():
 		node.color = RAM_COLOR
 		node.visible = true
 	highlighted_hexes[ai_mech.hex_coord] = true
-	status_label.text = "Click the enemy to crash your drone into it (destroys the drone, %d drone action(s) left)" % special_chain_remaining
+	_set_status("Click the enemy to crash your drone into it (destroys the drone, %d drone action(s) left)" % special_chain_remaining)
 
 
 func _on_end_turn_pressed():
@@ -1524,7 +1687,7 @@ func _handle_cell_pressed(coord: Vector2i):
 					enemy.move_to(beyond)
 					enemy.take_damage(1)
 					current_mech.move_to(coord, current_move_action)
-					status_label.text = "You rammed the enemy back for 1 damage and took its place!"
+					_set_status("You rammed the enemy back for 1 damage and took its place!")
 					move_points_remaining -= RAM_COST
 					# Ramming is the only Move outcome that can deal damage, so
 					# it's the only one that needs a game-over check — every
@@ -1552,9 +1715,10 @@ func _handle_cell_pressed(coord: Vector2i):
 					reaction_fired = _resolve_aoe_attack(current_mech, action, attack_level)
 				else:
 					var result := current_mech.attack(enemy, action, attack_level, _react_level_for(enemy))
-					var moved := _apply_push_pull(current_mech.hex_coord, enemy, action.push_pull)
+					if action.range > 1:
+						_show_line_of_sight(current_mech.global_position, enemy.global_position)
 					var reaction_suffix := " (%s's Reaction blocked %d damage!)" % [result.reaction_part_name, result.reaction_reduction] if result.reaction_used else ""
-					status_label.text = "You hit for %s = %d damage!%s%s" % [str(result.hits), result.damage, _push_pull_suffix(action.push_pull, moved), reaction_suffix]
+					_set_status("You hit for %s = %d damage!%s" % [str(result.hits), result.damage, reaction_suffix])
 					_show_dice(result.hits, result.colors)
 					reaction_fired = result.reaction_used
 				_rotate_action_levels("attack")
@@ -1580,7 +1744,7 @@ func _handle_cell_pressed(coord: Vector2i):
 			elif drone_sub_action == "crash":
 				if coord == ai_mech.hex_coord and HexGrid.distance(selected_drone.hex_coord, ai_mech.hex_coord) == 1:
 					var damage := selected_drone.crash(ai_mech)
-					status_label.text = "Your drone crashed for %d damage and was destroyed!" % damage
+					_set_status("Your drone crashed for %d damage and was destroyed!" % damage)
 					if not _check_game_over():
 						await get_tree().create_timer(3.0).timeout
 						_advance_special_chain()
@@ -1588,7 +1752,7 @@ func _handle_cell_pressed(coord: Vector2i):
 				var drone_dist := HexGrid.distance(selected_drone.hex_coord, ai_mech.hex_coord)
 				if coord == ai_mech.hex_coord and drone_dist <= selected_drone.drone_type.range and drone_dist >= selected_drone.drone_type.min_range and _has_line_of_sight(selected_drone.hex_coord, ai_mech.hex_coord):
 					var result := selected_drone.attack(ai_mech)
-					status_label.text = "Drone hit for %s = %d damage!" % [str(result.hits), result.damage]
+					_set_status("Drone hit for %s = %d damage!" % [str(result.hits), result.damage])
 					_show_dice(result.hits, result.colors)
 					if not _check_game_over():
 						await get_tree().create_timer(3.0).timeout
@@ -1613,7 +1777,7 @@ func _deploy_drone(coord: Vector2i):
 
 func _on_drone_died(drone: Drone):
 	var remaining := player_mech.get_max_drones() - drones_deployed
-	status_label.text = "One of your drones was destroyed! (%d more deployable this match)" % remaining
+	_set_status("One of your drones was destroyed! (%d more deployable this match)" % remaining)
 	player_drones.erase(drone)
 	if selected_drone == drone:
 		selected_drone = null
@@ -1647,7 +1811,11 @@ func _broadcast_state():
 		"current_is_player": current_mech == player_mech,
 		"actions_used": actions_used,
 		"action_levels": action_levels.duplicate(),
-		"status_text": status_label.text,
+		# Just the latest line, not the joined multi-line status_label.text —
+		# the client keeps its own local history via _set_status(), same as
+		# every other caller; sending the whole joined block would nest the
+		# host's last 3 lines into a single entry in the client's history.
+		"status_text": _status_history[-1] if not _status_history.is_empty() else "",
 		"game_over": game_over,
 		"player_score": player_score,
 		"ai_score": ai_score,
@@ -1676,7 +1844,7 @@ func _rpc_apply_snapshot(data: Dictionary):
 	# Array[String] declaration.
 	player_mech.overdrive_actions.assign(data.get("player_overdrive", player_mech.overdrive_actions))
 	ai_mech.overdrive_actions.assign(data.get("ai_overdrive", ai_mech.overdrive_actions))
-	status_label.text = data["status_text"]
+	_set_status(data["status_text"])
 	_update_action_level_labels()
 	_update_score_label()
 	if game_over:
@@ -1688,6 +1856,7 @@ func _rpc_apply_snapshot(data: Dictionary):
 		end_turn_button.disabled = true
 		skip_move_button.disabled = true
 		skip_move_button_2.disabled = true
+		_update_phase_highlight()
 	else:
 		_apply_turn_ui()
 
@@ -1709,8 +1878,9 @@ func _clear_pending():
 ## stopping short of the player mech or any of its drones' hexes. Returns true
 ## if it moved.
 func _ai_move_leg(target_coord: Vector2i, movement_points: float, move_action: Actions = null) -> bool:
-	var move_reachable := PathFinder.find_reachable(ai_mech.hex_coord, movement_points, grid)
-	var path := PathFinder.find_path_astar(ai_mech.hex_coord, target_coord, grid)
+	var ignore_terrain_cost := move_action != null and move_action.flight
+	var move_reachable := PathFinder.find_reachable(ai_mech.hex_coord, movement_points, grid, ignore_terrain_cost)
+	var path := PathFinder.find_path_astar(ai_mech.hex_coord, target_coord, grid, ignore_terrain_cost)
 	var moved := false
 	for step in path:
 		if step == player_mech.hex_coord:
@@ -1722,44 +1892,6 @@ func _ai_move_leg(target_coord: Vector2i, movement_points: float, move_action: A
 		ai_mech.move_to(step, move_action)
 		moved = true
 	return moved
-
-
-## Shoves [param target] (a mech or Drone) [param amount] hexes along the
-## attacker→target line: positive pushes it away, negative pulls it closer.
-## Stops early on impassable terrain or a hex already occupied by another
-## unit. Returns how many hexes it actually moved.
-func _apply_push_pull(attacker_coord: Vector2i, target, amount: int) -> int:
-	if amount == 0 or not is_instance_valid(target):
-		return 0
-
-	var dir_index := HexDirections.direction_index(attacker_coord, target.hex_coord)
-	if dir_index == -1:
-		return 0
-	var dir : Vector3i = HexDirections.DIRECTIONS[dir_index]
-	if amount < 0:
-		dir = -dir
-
-	var current : Vector2i = target.hex_coord
-	var moved := 0
-	for i in absi(amount):
-		var next := HexDirections.cube_to_offset(HexGrid.offset_to_cube(current) + dir)
-		if not grid.is_valid(next) or not grid.is_passable(next):
-			break
-		if next == player_mech.hex_coord or next == ai_mech.hex_coord:
-			break
-		if _drone_at(next) != null:
-			break
-		current = next
-		target.move_to(current)
-		moved += 1
-	return moved
-
-
-## Builds a status suffix like " Target pushed back 2!" for a push/pull result.
-func _push_pull_suffix(amount: int, moved: int) -> String:
-	if moved == 0:
-		return ""
-	return " Target pulled closer %d!" % moved if amount < 0 else " Target pushed back %d!" % moved
 
 
 ## Faces ai_mech toward target_coord if there's a meaningful direction.
@@ -1860,16 +1992,17 @@ func _ai_take_random_turn() -> bool:
 	if attack_action and _has_line_of_sight(ai_mech.hex_coord, player_mech.hex_coord) and randf() < 0.5:
 		_ai_face(player_mech.hex_coord)
 		var result := ai_mech.attack(player_mech, attack_action, ai_mech.get_effective_level("attack", 1), _react_level_for(player_mech))
-		var moved := _apply_push_pull(ai_mech.hex_coord, player_mech, attack_action.push_pull)
+		if attack_action.range > 1:
+			_show_line_of_sight(ai_mech.global_position, player_mech.global_position)
 		var reaction_suffix := " (%s's Reaction blocked %d damage!)" % [result.reaction_part_name, result.reaction_reduction] if result.reaction_used else ""
-		status_label.text = "Enemy hit for %s = %d damage!%s%s" % [str(result.hits), result.damage, _push_pull_suffix(attack_action.push_pull, moved), reaction_suffix]
+		_set_status("Enemy hit for %s = %d damage!%s" % [str(result.hits), result.damage, reaction_suffix])
 		_show_dice(result.hits, result.colors)
 		if result.reaction_used:
 			_rotate_action_levels("react")
 		return true
 
 	if move_action:
-		var reachable := PathFinder.find_reachable(ai_mech.hex_coord, float(move_action.movement), grid)
+		var reachable := PathFinder.find_reachable(ai_mech.hex_coord, float(move_action.movement), grid, move_action.flight)
 		reachable.erase(ai_mech.hex_coord)
 		var options : Array = []
 		for coord in reachable.keys():
@@ -1877,10 +2010,10 @@ func _ai_take_random_turn() -> bool:
 				options.append(coord)
 		if not options.is_empty():
 			ai_mech.move_to(options[randi() % options.size()], move_action)
-			status_label.text = "Enemy wandered aimlessly."
+			_set_status("Enemy wandered aimlessly.")
 			return false
 
-	status_label.text = "Enemy did nothing useful."
+	_set_status("Enemy did nothing useful.")
 	return false
 
 
@@ -1897,7 +2030,7 @@ func _ai_take_turn() -> bool:
 
 	var target = _ai_pick_target(behavior)
 	if target == null:
-		status_label.text = "Enemy passed."
+		_set_status("Enemy passed.")
 		return false
 
 	var move_action := ai_mech.get_move_action()
@@ -1907,7 +2040,7 @@ func _ai_take_turn() -> bool:
 
 	if behavior.retreat_hp_fraction > 0.0 and hp_fraction < behavior.retreat_hp_fraction and move_action:
 		var retreated := _ai_retreat_leg(target.hex_coord, float(move_action.movement), move_action)
-		status_label.text = "Enemy retreated." if retreated else "Enemy held position, cornered."
+		_set_status("Enemy retreated." if retreated else "Enemy held position, cornered.")
 		return false
 
 	var attack_action := _ai_choose_attack_action(dist, behavior)
@@ -1934,10 +2067,11 @@ func _ai_take_turn() -> bool:
 				_rotate_action_levels("react")
 		else:
 			var result := ai_mech.attack(target, attack_action, ai_attack_level, _react_level_for(target))
-			var moved := _apply_push_pull(ai_mech.hex_coord, target, attack_action.push_pull)
+			if attack_action.range > 1:
+				_show_line_of_sight(ai_mech.global_position, target.global_position)
 			var who := "you" if target == player_mech else "one of your drones"
 			var reaction_suffix := " (%s's Reaction blocked %d damage!)" % [result.reaction_part_name, result.reaction_reduction] if result.reaction_used else ""
-			status_label.text = "Enemy hit %s for %s = %d damage!%s%s" % [who, str(result.hits), result.damage, _push_pull_suffix(attack_action.push_pull, moved), reaction_suffix]
+			_set_status("Enemy hit %s for %s = %d damage!%s" % [who, str(result.hits), result.damage, reaction_suffix])
 			_show_dice(result.hits, result.colors)
 			if result.reaction_used:
 				_rotate_action_levels("react")
@@ -1947,8 +2081,8 @@ func _ai_take_turn() -> bool:
 		var moved := _ai_move_leg(target.hex_coord, float(move_action.movement), move_action)
 		if moved:
 			_ai_face(target.hex_coord)
-		status_label.text = "Enemy moved." if moved else "Enemy held position."
+		_set_status("Enemy moved." if moved else "Enemy held position.")
 	else:
-		status_label.text = "Enemy passed."
+		_set_status("Enemy passed.")
 
 	return false

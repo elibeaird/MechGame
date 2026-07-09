@@ -106,9 +106,14 @@ func is_valid(coord: Vector2i) -> bool:
 	return cells.has(coord)
 
 
-## Retorna true si la celda existe y su costo de terreno > 0 (no intransitable).
+## Retorna true si la celda existe y su costo de terreno no es intransitable.
+## Intransitable se codifica siempre como costo negativo (-1.0 — ver
+## _get_terrain_cost()/TerrainType.passable), nunca como cero: un costo de
+## 0 es un terreno legítimamente gratis de cruzar, no bloqueado. Antes esta
+## función comparaba "> 0", así que un TerrainType con difficulty = 0 (y
+## passable = true) se leía como intransitable por error.
 func is_passable(coord: Vector2i) -> bool:
-	return _get_terrain_cost(coord) > 0
+	return _get_terrain_cost(coord) >= 0.0
 
 
 ## Retorna el costo de movimiento de entrar a [param coord].

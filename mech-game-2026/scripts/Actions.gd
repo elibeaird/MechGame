@@ -25,10 +25,6 @@ extends Resource
 @export var yellow_dice : int
 @export var purple_dice : int
 
-## Hexes to shove the target on a successful hit. Positive = push (away
-## from the attacker), negative = pull (toward the attacker), 0 = no effect.
-@export var push_pull : int = 0
-
 ## Extra max HP granted while this part is equipped (0 for non-HP parts).
 @export var bonus_hp : int = 0
 

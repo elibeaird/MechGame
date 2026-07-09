@@ -7,6 +7,7 @@
 script = ExtResource("1_5v4vl")
 drone_type = ExtResource("2_basic_drone")
 max_drones = 3
+display_level_tag = "X"
 display_name = "WM-Aqua_Claw"
 bonus_hp = 4
 required_level = 1

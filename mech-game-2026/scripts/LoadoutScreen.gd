@@ -151,7 +151,11 @@ func refresh():
 
 ## Icon reflecting the part's level requirement: lvl_0 if none, lvl_x if it's
 ## a minimum (usable at any charged level), or lvl_1/2/3 for an exact tier.
+## Skipped entirely if the part has its own display_level_tag set (not
+## "Auto") — see Part.gd.
 func _level_icon_for(part: Part) -> Texture2D:
+	if part.display_level_tag != "Auto":
+		return _get_resized_level_icon(part.display_level_tag.to_lower())
 	var key := "0"
 	if part.required_level > 0:
 		key = str(part.required_level)

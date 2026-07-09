@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://5dss30bvatpu" path="res://scripts/Game_Manager.gd" id="1_bo1nx"]
 [ext_resource type="PackedScene" uid="uid://y8o3ld63x6fs" path="res://Scenes/mech.tscn" id="2_8gbba"]
-[ext_resource type="Resource" uid="uid://crw624k6qlqgx" path="res://resources/Levels/Testing_arena.tres" id="2_ynf5e"]
+[ext_resource type="Resource" path="res://resources/Levels/hill_arena.tres" id="2_hibaj"]
 [ext_resource type="Script" uid="uid://dve8mgkmjhqqp" path="res://scripts/Part.gd" id="3_part"]
 [ext_resource type="Resource" uid="uid://cbergeohh5bht" path="res://resources/parts/WM-Aqua_Claw.tres" id="5_claw"]
 [ext_resource type="Resource" uid="uid://bj00v6q8ifn3y" path="res://resources/parts/WM-Aqua-Rech.tres" id="5_hptm8"]
@@ -72,7 +72,7 @@ corner_radius_bottom_left = 8
 script = ExtResource("1_bo1nx")
 player_mech = NodePath("UI/WorldViewportContainer/WorldViewport/player_mech")
 ai_mech = NodePath("UI/WorldViewportContainer/WorldViewport/ai_mech")
-level_map = ExtResource("2_ynf5e")
+level_map = ExtResource("2_hibaj")
 
 [node name="UI" type="CanvasLayer" parent="." unique_id=802051713]
 
@@ -93,6 +93,12 @@ render_target_update_mode = 4
 [node name="HexContainer" type="Node2D" parent="UI/WorldViewportContainer/WorldViewport" unique_id=1418091569]
 
 [node name="Camera2D" type="Camera2D" parent="UI/WorldViewportContainer/WorldViewport" unique_id=1567481253]
+
+[node name="LineOfSightLine" type="Line2D" parent="UI/WorldViewportContainer/WorldViewport" unique_id=1728756550]
+visible = false
+z_index = 10
+width = 2.0
+default_color = Color(1, 0.9, 0.2, 0.85)
 
 [node name="player_mech" parent="UI/WorldViewportContainer/WorldViewport" unique_id=429761759 instance=ExtResource("2_8gbba")]
 is_player = true
@@ -118,6 +124,7 @@ anchors_preset = 0
 offset_top = 8.0
 offset_right = 708.0
 offset_bottom = 297.0
+mouse_filter = 2
 
 [node name="Background" type="NinePatchRect" parent="UI/MovePanel" unique_id=2136178016]
 layout_mode = 1
@@ -126,6 +133,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = -33.0
 offset_right = -281.0
+offset_bottom = -96.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("21_panelmove")
@@ -140,6 +148,7 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_right = -289.0
+offset_bottom = -107.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/margin_left = 18
@@ -167,6 +176,7 @@ anchors_preset = 0
 offset_top = 301.0
 offset_right = 708.0
 offset_bottom = 665.0
+mouse_filter = 2
 
 [node name="Background" type="NinePatchRect" parent="UI/SecondActionPanel" unique_id=1211771678]
 layout_mode = 1
@@ -174,7 +184,9 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = -34.0
+offset_top = -91.0
 offset_right = -282.0
+offset_bottom = 44.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("22_panelsecond")
@@ -188,7 +200,10 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_right = -303.0
+offset_left = -13.0
+offset_top = -73.0
+offset_right = -289.0
+offset_bottom = 28.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/margin_left = 18
@@ -295,7 +310,7 @@ text = "REACT"
 icon = ExtResource("28_iconreact")
 expand_icon = true
 
-[node name="ResetButton" type="Button" parent="UI/SecondActionPanel/Margin/VBox"]
+[node name="ResetButton" type="Button" parent="UI/SecondActionPanel/Margin/VBox" unique_id=1641599362]
 layout_mode = 2
 theme_override_styles/normal = SubResource("StyleBoxFlat_reset")
 text = "RESET (reorder actions)"
@@ -311,6 +326,7 @@ anchors_preset = 0
 offset_top = 670.0
 offset_right = 708.0
 offset_bottom = 888.0
+mouse_filter = 2
 
 [node name="Background" type="NinePatchRect" parent="UI/EndTurnPanel" unique_id=871394382]
 layout_mode = 1
@@ -318,7 +334,9 @@ anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 offset_left = -31.0
+offset_top = 48.0
 offset_right = -285.0
+offset_bottom = -2.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("23_panelend")
@@ -332,6 +350,7 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_top = 53.0
 offset_right = -314.0
 grow_horizontal = 2
 grow_vertical = 2
@@ -432,44 +451,71 @@ horizontal_alignment = 1
 [node name="WeaponList" type="VBoxContainer" parent="UI/AttackWeaponPopup/VBoxContainer" unique_id=1430792168]
 layout_mode = 2
 
-[node name="OverdrivePopup" type="PopupPanel" parent="UI"]
+[node name="OverdrivePopup" type="PopupPanel" parent="UI" unique_id=520817082]
 size = Vector2i(260, 220)
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/OverdrivePopup"]
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/OverdrivePopup" unique_id=1616117817]
 offset_left = 4.0
 offset_top = 4.0
 offset_right = 256.0
 offset_bottom = 216.0
 
-[node name="TitleLabel" type="Label" parent="UI/OverdrivePopup/VBoxContainer"]
+[node name="TitleLabel" type="Label" parent="UI/OverdrivePopup/VBoxContainer" unique_id=1801651763]
 layout_mode = 2
-text = "Choose an action to Overdrive"
+text = "You were destroyed! Choose an action to Overdrive:"
 horizontal_alignment = 1
 autowrap_mode = 2
 
-[node name="ActionList" type="VBoxContainer" parent="UI/OverdrivePopup/VBoxContainer"]
+[node name="ActionList" type="VBoxContainer" parent="UI/OverdrivePopup/VBoxContainer" unique_id=601092870]
 layout_mode = 2
 
-[node name="ResetOrderPopup" type="PopupPanel" parent="UI"]
+[node name="ResetOrderPopup" type="PopupPanel" parent="UI" unique_id=444556725]
 size = Vector2i(260, 240)
 
-[node name="VBoxContainer" type="VBoxContainer" parent="UI/ResetOrderPopup"]
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/ResetOrderPopup" unique_id=1926481694]
 offset_left = 4.0
 offset_top = 4.0
 offset_right = 256.0
 offset_bottom = 236.0
 
-[node name="TitleLabel" type="Label" parent="UI/ResetOrderPopup/VBoxContainer"]
+[node name="TitleLabel" type="Label" parent="UI/ResetOrderPopup/VBoxContainer" unique_id=175376578]
 layout_mode = 2
 text = "Click to rank, highest first"
 horizontal_alignment = 1
 autowrap_mode = 2
 
-[node name="ActionList" type="VBoxContainer" parent="UI/ResetOrderPopup/VBoxContainer"]
+[node name="ActionList" type="VBoxContainer" parent="UI/ResetOrderPopup/VBoxContainer" unique_id=266122427]
 layout_mode = 2
+
+[node name="MatchEventPopup" type="PopupPanel" parent="UI" unique_id=1024653103]
+size = Vector2i(320, 200)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/MatchEventPopup" unique_id=1114087809]
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 316.0
+offset_bottom = 196.0
+theme_override_constants/separation = 16
+
+[node name="TitleLabel" type="Label" parent="UI/MatchEventPopup/VBoxContainer" unique_id=1488403503]
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "VICTORY!"
+horizontal_alignment = 1
+
+[node name="MessageLabel" type="Label" parent="UI/MatchEventPopup/VBoxContainer" unique_id=1398626478]
+layout_mode = 2
+text = "You win 2-0."
+horizontal_alignment = 1
+autowrap_mode = 2
+
+[node name="OkButton" type="Button" parent="UI/MatchEventPopup/VBoxContainer" unique_id=587691973]
+layout_mode = 2
+text = "OK"
 
 [node name="LoadoutLayer" type="CanvasLayer" parent="." unique_id=1326255289]
 layer = 10
+visible = false
 script = ExtResource("6_loadout")
 
 [node name="Background" type="ColorRect" parent="LoadoutLayer" unique_id=598993173]

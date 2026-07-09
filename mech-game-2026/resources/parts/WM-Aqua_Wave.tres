@@ -5,6 +5,7 @@
 [resource]
 script = ExtResource("1_apxog")
 max_drones = 0
+display_level_tag = "3"
 display_name = "WM-Aqua_Wave"
 movement = 2
 bonus_hp = 4

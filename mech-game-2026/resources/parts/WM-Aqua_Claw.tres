@@ -5,6 +5,7 @@
 [resource]
 script = ExtResource("1_ecwuh")
 max_drones = 0
+display_level_tag = "2"
 display_name = "WM-Aqua_Claw"
 range = 1
 is_aoe = true
