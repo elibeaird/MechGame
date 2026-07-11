@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="Part" format=3 uid="uid://ditprjsybg038"]
+
+[ext_resource type="Script" uid="uid://dve8mgkmjhqqp" path="res://scripts/Part.gd" id="1_fm3mt"]
+
+[resource]
+script = ExtResource("1_fm3mt")
+max_drones = 0
+can_react = true
+display_level_tag = "2"
+display_name = "TRED-ARMR"
+purple_dice = 1
+bonus_hp = 3
+required_level = 2
+metadata/_custom_type_script = "uid://dve8mgkmjhqqp"

@@ -1,0 +1,106 @@
+[gd_scene format=3 uid="uid://b81e65vh3c7jp"]
+
+[ext_resource type="Script" uid="uid://buorp3mhibiyn" path="res://scripts/Drone.gd" id="1_shbss"]
+[ext_resource type="Texture2D" uid="uid://ds6bgpbh321ob" path="res://images/animations/drone_defeat_2.png" id="2_ih7gd"]
+[ext_resource type="Texture2D" uid="uid://ox2q2426wjhl" path="res://images/animations/drone_defeat_1.png" id="3_obhco"]
+[ext_resource type="Texture2D" uid="uid://2o4xiry10t3d" path="res://images/animations/drone_defeat_3.png" id="4_5i5m1"]
+[ext_resource type="Texture2D" uid="uid://bd704hdysvrxb" path="res://images/animations/drone_deploy_1.png" id="5_hjoj1"]
+[ext_resource type="Texture2D" uid="uid://bn1b1ttl1x4s" path="res://images/animations/drone_deploy_2.png" id="6_k6eue"]
+[ext_resource type="Texture2D" uid="uid://ggfi7cf6vikc" path="res://images/animations/drone_deploy_3.png" id="7_syr40"]
+[ext_resource type="Texture2D" uid="uid://85ccni0qxo54" path="res://images/PixelArt/Drone_Missle2.png" id="8_ocde6"]
+[ext_resource type="Texture2D" uid="uid://c02pcqpxkjpu4" path="res://images/PixelArt/Drone_Missle1.png" id="9_spitd"]
+[ext_resource type="Texture2D" uid="uid://b8vl0e6voxr6a" path="res://images/PixelArt/Drone_Missle3.png" id="10_cmhck"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_drone_body"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_ih7gd")
+}],
+"loop": 0,
+"name": &"crash",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("3_obhco")
+}, {
+"duration": 1.0,
+"texture": ExtResource("2_ih7gd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_5i5m1")
+}],
+"loop": 0,
+"name": &"defeated",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_hjoj1")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_k6eue")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_syr40")
+}],
+"loop": 0,
+"name": &"deploy",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("8_ocde6")
+}],
+"loop": 0,
+"name": &"hit",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("9_spitd")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_ocde6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_cmhck")
+}, {
+"duration": 1.0,
+"texture": ExtResource("8_ocde6")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("8_ocde6")
+}],
+"loop": 0,
+"name": &"move",
+"speed": 5.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_drone_attack_effect"]
+animations = [{
+"frames": [],
+"loop": 0,
+"name": &"attack",
+"speed": 5.0
+}]
+
+[node name="Drone" type="Node2D" unique_id=485412406]
+script = ExtResource("1_shbss")
+
+[node name="Body" type="AnimatedSprite2D" parent="." unique_id=772436198]
+scale = Vector2(0.3, 0.3)
+sprite_frames = SubResource("SpriteFrames_drone_body")
+animation = &"move"
+
+[node name="AttackEffect" type="AnimatedSprite2D" parent="." unique_id=1388721945]
+visible = false
+scale = Vector2(0.0488, 0.0488)
+sprite_frames = SubResource("SpriteFrames_drone_attack_effect")
+animation = &"attack"

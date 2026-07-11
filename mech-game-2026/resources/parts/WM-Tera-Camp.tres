@@ -8,6 +8,6 @@ max_drones = 0
 can_react = true
 display_level_tag = "3"
 purple_dice = 1
-bonus_hp = 3
+bonus_hp = 2
 required_level = 3
 metadata/_custom_type_script = "uid://dve8mgkmjhqqp"

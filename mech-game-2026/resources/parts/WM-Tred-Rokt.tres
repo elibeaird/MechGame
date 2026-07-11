@@ -1,0 +1,14 @@
+[gd_resource type="Resource" script_class="Part" format=3 uid="uid://cu2hi7jeo6nlx"]
+
+[ext_resource type="Script" uid="uid://dve8mgkmjhqqp" path="res://scripts/Part.gd" id="1_d7uny"]
+[ext_resource type="Resource" uid="uid://dxtek32n1seda" path="res://resources/Drones/Missile_Drone.tres" id="1_iy2gb"]
+
+[resource]
+script = ExtResource("1_d7uny")
+drone_type = ExtResource("1_iy2gb")
+max_drones = 4
+display_level_tag = "2"
+display_name = "TRED-ROKT"
+bonus_hp = 3
+required_level = 3
+metadata/_custom_type_script = "uid://dve8mgkmjhqqp"

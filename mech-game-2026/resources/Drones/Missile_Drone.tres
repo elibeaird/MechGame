@@ -1,10 +1,14 @@
 [gd_resource type="Resource" script_class="DroneType" format=3 uid="uid://dxtek32n1seda"]
 
 [ext_resource type="Script" uid="uid://d3fscaf7ua3mc" path="res://scripts/DroneType.gd" id="1_kgx7r"]
+[ext_resource type="PackedScene" uid="uid://b81e65vh3c7jp" path="res://Scenes/Drone_missle.tscn" id="2_missle"]
 
 [resource]
 script = ExtResource("1_kgx7r")
-display_name = "Basic Drone"
+display_name = "Missle"
 movement = 3
 flight = true
 is_aoe = true
+yellow_dice = 2
+bonus_hp = 3
+visual_scene = ExtResource("2_missle")

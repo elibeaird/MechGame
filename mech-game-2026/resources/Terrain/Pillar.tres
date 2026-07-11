@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="TerrainType" format=3 uid="uid://duvyu6na168fm"]
 
 [ext_resource type="Script" uid="uid://1mabv3r8efli" path="res://scripts/TerrainType.gd" id="1_terraintype"]
-[ext_resource type="Texture2D" uid="uid://c6dqo68wefak5" path="res://images/Terrain/terain_1.png" id="2_mfyai"]
+[ext_resource type="Texture2D" uid="uid://0lhvwmrwrw4o" path="res://images/Terrain/terrain1.png" id="2_mfyai"]
 
 [resource]
 script = ExtResource("1_terraintype")

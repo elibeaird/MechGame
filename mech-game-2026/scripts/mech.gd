@@ -24,6 +24,14 @@ const MAX_PARTS := 4
 ## Game_Manager falls back to a default if this is unset.
 @export var ai_behavior : AIBehavior
 
+## Reskins this mech with another chassis scene's art (e.g.
+## res://Scenes/Mech_Tera.tscn, Mech_Aqua.tscn, Mech_aero.tscn) — set this
+## instead of hand-editing which scene main.tscn instances. Any of that
+## scene's BodyRight/BodyUpperRight/.../AttackEffect nodes it has get copied
+## over; any it doesn't have, this mech keeps its own baked-in art for. Null
+## (default) keeps this mech's own art as-is. Applied once in _ready().
+@export var chassis_visual : PackedScene = null
+
 var hex_size : float = HexGrid.HEX_SIZE
 var max_hp : int = 0
 var current_hp : int
@@ -119,6 +127,9 @@ func _ready():
 		"upper_left": _body_upper_left, "left": _body_left, "lower_left": _body_lower_left,
 	}
 
+	if chassis_visual != null:
+		_apply_chassis_visual(chassis_visual)
+
 	# mech.tscn's 6 body sprites + attack effect are each SubResource-backed
 	# SpriteFrames — shared by reference across every instance of this scene
 	# (both player_mech and ai_mech) unless duplicated here. Without this, a
@@ -138,6 +149,85 @@ func _ready():
 
 	_attack_effect.visible = false
 	_attack_effect.animation_finished.connect(_on_attack_effect_finished)
+
+## Runtime version of the chassis_visual export — swaps this mech's art to
+## source's immediately, e.g. when a player picks a themed Quick Loadout
+## preset in LoadoutScreen after the mech is already alive on-screen.
+## chassis_visual itself is only ever read once, in _ready(); this is how
+## anything later than that changes it. No-op if source is null.
+func set_chassis_visual(source: PackedScene):
+	if source == null:
+		return
+	chassis_visual = source
+	_apply_chassis_visual(source)
+	_play_idle()
+
+## Copies source's body/attack-effect art onto this mech's own sprites — see
+## chassis_visual/set_chassis_visual(). Each sprite's new frames are
+## duplicated on the way in, same as the sprite_frames.duplicate(true) loop
+## in _ready() does for this mech's own baked-in art — otherwise two mechs
+## (or two calls) picking the same chassis would end up sharing one
+## SpriteFrames object, and a per-part animation copied onto one (see
+## play_*_animation()) would leak onto the other.
+##
+## Also rescales each sprite to compensate for source's art being a
+## different native resolution than whatever this mech's own art already
+## was (e.g. dropping in a 36x36 pixel-art replacement for a 200x200
+## painted sprite) — otherwise the swapped-in art would suddenly render
+## tiny or huge instead of at the mech's usual on-screen size. This makes
+## chassis_visual resolution-agnostic, so future art (pixel or otherwise)
+## at any size drops in at the right size without needing scale tuned by
+## hand per chassis scene. The rescale snaps to a whole-number factor (see
+## _rescale_sprite_for_new_art()) rather than matching the target size
+## exactly, so pixel art actually looks crisp instead of unevenly scaled.
+func _apply_chassis_visual(source: PackedScene):
+	var sprite_by_node_name := {
+		"BodyRight": _body_right, "BodyUpperRight": _body_upper_right, "BodyLowerRight": _body_lower_right,
+		"BodyUpperLeft": _body_upper_left, "BodyLeft": _body_left, "BodyLowerLeft": _body_lower_left,
+	}
+	for node_name in sprite_by_node_name:
+		var sprite : AnimatedSprite2D = sprite_by_node_name[node_name]
+		var frames := SpriteFramesUtil.extract_named_sprite_frames(source, node_name)
+		if frames:
+			var old_size := _reference_frame_size(sprite.sprite_frames)
+			var new_size := _reference_frame_size(frames)
+			sprite.sprite_frames = frames.duplicate(true)
+			_rescale_sprite_for_new_art(sprite, old_size, new_size)
+	var attack_frames := SpriteFramesUtil.extract_named_sprite_frames(source, "AttackEffect")
+	if attack_frames:
+		var old_size := _reference_frame_size(_attack_effect.sprite_frames)
+		var new_size := _reference_frame_size(attack_frames)
+		_attack_effect.sprite_frames = attack_frames.duplicate(true)
+		_rescale_sprite_for_new_art(_attack_effect, old_size, new_size)
+
+## Rescales sprite so its just-swapped-in art (new_size, its native pixel
+## width) lands at roughly the on-screen size old_size/sprite's previous
+## scale implied — snapped to the nearest whole-number scale factor rather
+## than matching that target exactly. Pixel art wants every source pixel
+## mapped to an identically-sized block of screen pixels; a fractional
+## scale (e.g. 2.03x) still looks uneven/jittery even with nearest-neighbor
+## filtering on, since different source pixels then land on inconsistently
+## sized blocks. Trading a little precision on the target size is worth it
+## for crisp, even pixels. No-op if either size is unknown (0.0).
+func _rescale_sprite_for_new_art(sprite: AnimatedSprite2D, old_size: float, new_size: float):
+	if old_size <= 0.0 or new_size <= 0.0:
+		return
+	var ideal_scale := sprite.scale.x * (old_size / new_size)
+	sprite.scale = Vector2.ONE * maxf(1.0, roundf(ideal_scale))
+
+## Pixel width of frame 0 of "idle" (or whichever animation exists first, if
+## frames has no "idle") — used by _apply_chassis_visual() as a stand-in for
+## "how big was this art actually drawn" so a swap can rescale against it.
+## 0.0 if there's nothing to measure (null frames, or an empty animation).
+func _reference_frame_size(frames: SpriteFrames) -> float:
+	if frames == null:
+		return 0.0
+	var names := frames.get_animation_names()
+	var anim : StringName = &"idle" if frames.has_animation("idle") else (names[0] if names.size() > 0 else &"")
+	if anim == &"" or frames.get_frame_count(anim) == 0:
+		return 0.0
+	var tex := frames.get_frame_texture(anim, 0)
+	return tex.get_width() if tex else 0.0
 
 func _process(delta):
 	scale = scale.lerp(_base_scale * target_scale, delta * 8.0)
@@ -247,6 +337,18 @@ func get_max_drones() -> int:
 		if part.drone_type != null:
 			return part.max_drones
 	return 0
+
+## Every equipped part that grants a drone (drone_type != null) — used to let
+## the player pick which one to deploy from when more than one is equipped,
+## same idea as get_available_attack_actions(). get_drone_type()/
+## get_max_drones() still just return the first match, for callers (the AI)
+## that don't need to choose.
+func get_available_drone_parts() -> Array[Part]:
+	var options : Array[Part] = []
+	for part in parts:
+		if part.drone_type != null:
+			options.append(part)
+	return options
 
 ## Returns the first equipped part that can move (movement > 0) and whose
 ## level requirement is met, or the innate Move 2 if none qualify (parts

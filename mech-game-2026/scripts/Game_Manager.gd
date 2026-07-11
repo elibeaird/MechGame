@@ -4,7 +4,7 @@ enum PendingMode { NONE, MOVE, ATTACK, SPECIAL }
 
 const HEX_SIZE := 48.0
 
-const DRONE_SCENE := preload("res://Scenes/drone.tscn")
+const DRONE_SCENE := preload("res://Scenes/Drone_basic.tscn")
 
 ## Used if level_map isn't assigned in the scene, so existing scenes keep
 ## working without needing an update.
@@ -155,6 +155,9 @@ const OVERDRIVE_ICON_TEXTURES := {
 @onready var attack_weapon_popup: PopupPanel = $UI/AttackWeaponPopup
 @onready var attack_weapon_list: VBoxContainer = $UI/AttackWeaponPopup/VBoxContainer/WeaponList
 
+@onready var drone_type_popup: PopupPanel = $UI/DroneTypePopup
+@onready var drone_type_list: VBoxContainer = $UI/DroneTypePopup/VBoxContainer/DroneTypeList
+
 @onready var overdrive_popup: PopupPanel = $UI/OverdrivePopup
 @onready var overdrive_action_list: VBoxContainer = $UI/OverdrivePopup/VBoxContainer/ActionList
 
@@ -202,9 +205,16 @@ var player_drones : Array[Drone] = []
 ## applies to. Set by clicking that drone's hex during the SPECIAL "choose
 ## deploy or select" step; null the rest of the time.
 var selected_drone : Drone = null
-## How many drones have been deployed so far this match, against the equipped
-## drone part's max_drones budget (mech.get_max_drones()). Never resets mid-match.
-var drones_deployed : int = 0
+## How many drones have been deployed so far this match, keyed per equipped
+## drone-granting Part against that part's own max_drones budget — a mech
+## with two drone parts equipped has two independent budgets, chosen between
+## via drone_type_popup (see _prompt_special_action()). Never resets mid-match
+## (except a respawn refund — see _score_kill()).
+var drones_deployed_by_part : Dictionary = {}
+## Which equipped drone-granting part the player picked for the current/most
+## recent deploy prompt — null until get_available_drone_parts() has exactly
+## one option or the player chooses one from drone_type_popup.
+var selected_drone_part : Part = null
 ## Which drone action the player picked from drone_action_popup this Special
 ## use: "move", "attack", or "crash". "" while choosing between deploying a
 ## new drone or selecting an existing one to control.
@@ -853,11 +863,12 @@ func _score_kill(killer: mech, victim: mech):
 		_set_status("%s mech was destroyed! Score: you %d — enemy %d." % [who, player_score, ai_score])
 		_handle_respawn_overdrive(victim)
 		# Drones are player-only (the AI never deploys any — see
-		# get_drone_type()/_ai_take_turn()) and drones_deployed otherwise
-		# never resets mid-match, so a respawn is the one moment that gives
-		# the player's drone budget back — dying already cost them a point.
-		if victim == player_mech and drones_deployed > 0:
-			drones_deployed = 0
+		# get_drone_type()/_ai_take_turn()) and drones_deployed_by_part
+		# otherwise never resets mid-match, so a respawn is the one moment
+		# that gives the player's drone budget back — dying already cost
+		# them a point.
+		if victim == player_mech and not drones_deployed_by_part.is_empty():
+			drones_deployed_by_part.clear()
 			_append_to_status(" Your drone deployments have been refreshed!")
 
 	_notify_match_event(killer, victim)
@@ -1514,11 +1525,62 @@ func _prompt_special_action():
 	drone_sub_action = ""
 	selected_drone = null
 
-	var drone_type := player_mech.get_drone_type()
-	var can_deploy := drone_type != null and drones_deployed < player_mech.get_max_drones()
+	var drone_parts := player_mech.get_available_drone_parts()
+	var deployable_parts : Array[Part] = []
+	for part in drone_parts:
+		if _drone_budget_remaining(part) > 0:
+			deployable_parts.append(part)
+
+	if deployable_parts.size() > 1:
+		_open_drone_type_popup(deployable_parts)
+		return
+
+	if not deployable_parts.is_empty():
+		selected_drone_part = deployable_parts[0]
+	elif not drone_parts.is_empty():
+		selected_drone_part = drone_parts[0]
+	else:
+		selected_drone_part = null
+	_continue_prompt_special_action()
+
+
+## Budget remaining for one equipped drone-granting part — see
+## drones_deployed_by_part.
+func _drone_budget_remaining(part: Part) -> int:
+	return part.max_drones - drones_deployed_by_part.get(part, 0)
+
+
+## Opens drone_type_popup so the player picks which equipped drone-granting
+## part to deploy from, when more than one currently has budget left — same
+## idea as _on_attack_pressed()'s weapon popup.
+func _open_drone_type_popup(options: Array[Part]):
+	for child in drone_type_list.get_children():
+		child.queue_free()
+	for part in options:
+		var btn := Button.new()
+		btn.text = "%s — %s (%d/%d left)" % [_attack_action_name(part), part.drone_type.display_name, _drone_budget_remaining(part), part.max_drones]
+		btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		btn.pressed.connect(_on_drone_type_chosen.bind(part))
+		drone_type_list.add_child(btn)
+	drone_type_popup.popup_centered()
+
+
+func _on_drone_type_chosen(part: Part):
+	drone_type_popup.hide()
+	selected_drone_part = part
+	_continue_prompt_special_action()
+
+
+## Shows the deploy-or-select step proper, once selected_drone_part is
+## resolved (see _prompt_special_action()) — click an empty adjacent hex to
+## deploy a new drone from that part (stock permitting), or click one of your
+## existing drones to pick it and open the move/attack/crash popup for it.
+func _continue_prompt_special_action():
+	var drone_type := selected_drone_part.drone_type if selected_drone_part else null
+	var can_deploy := drone_type != null and _drone_budget_remaining(selected_drone_part) > 0
 
 	if player_drones.is_empty() and not can_deploy:
-		_set_status("No equipped part grants a drone" if drone_type == null else "No drones remaining (%d/%d deployed)" % [drones_deployed, player_mech.get_max_drones()])
+		_set_status("No equipped part grants a drone" if drone_type == null else "No drones remaining (%d/%d deployed)" % [drones_deployed_by_part.get(selected_drone_part, 0), selected_drone_part.max_drones])
 		if special_chain_active:
 			_finish_special_use()
 		return
@@ -1765,18 +1827,19 @@ func _handle_cell_pressed(coord: Vector2i):
 
 func _deploy_drone(coord: Vector2i):
 	var drone : Drone = DRONE_SCENE.instantiate()
-	drone.setup(player_mech.get_drone_type())
+	drone.setup(selected_drone_part.drone_type)
+	drone.source_part = selected_drone_part
 	drone.hex_size = HEX_SIZE
 	drone.hex_coord = coord
 	world_viewport.add_child(drone)
 	drone.snap_to_grid()
 	drone.died.connect(_on_drone_died.bind(drone))
 	player_drones.append(drone)
-	drones_deployed += 1
+	drones_deployed_by_part[selected_drone_part] = drones_deployed_by_part.get(selected_drone_part, 0) + 1
 
 
 func _on_drone_died(drone: Drone):
-	var remaining := player_mech.get_max_drones() - drones_deployed
+	var remaining := _drone_budget_remaining(drone.source_part) if drone.source_part else 0
 	_set_status("One of your drones was destroyed! (%d more deployable this match)" % remaining)
 	player_drones.erase(drone)
 	if selected_drone == drone:

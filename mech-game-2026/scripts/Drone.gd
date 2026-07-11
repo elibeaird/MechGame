@@ -2,22 +2,23 @@ class_name Drone
 extends Node2D
 ## A deployed drone. Its HP, movement, attack range, and dice all come from
 ## whichever DroneType it was set up with — see setup(). Spawned from
-## res://Scenes/drone.tscn (Game_Manager.deploy_drone_scene.instantiate()),
+## res://Scenes/Basic_drone.tscn (Game_Manager.deploy_drone_scene.instantiate()),
 ## not Drone.new() — it needs its Body/AttackEffect children from the scene.
 
 signal died
-
-const RADIUS := 10.0
-const COLOR := Color(0.3, 0.8, 0.9)
 
 @export var hex_coord : Vector2i
 var hex_size : float = HexGrid.HEX_SIZE
 var drone_type : DroneType
 var hp : int = 1
+## The equipped Part this drone was deployed from — set by Game_Manager right
+## after instantiating, so a died/crashed drone can refund that specific
+## part's deployment budget (see Game_Manager.drones_deployed_by_part).
+var source_part : Part = null
 
 ## Shows drone_type's idle/deploy/move/crash/defeated/hit animations (from
 ## its visual_scene, see Actions.gd) when it has them; otherwise falls back
-## to whichever of those animations res://Scenes/drone.tscn's own Body
+## to whichever of those animations res://Scenes/Basic_drone.tscn's own Body
 ## SpriteFrames already has built in (see each play_*_animation() below) —
 ## drone_type only needs a visual_scene for a drone that wants to look
 ## different from the scene's default art.
@@ -47,7 +48,7 @@ func _ready():
 	play_deploy_animation()
 
 
-## Must be called once right after instantiating res://Scenes/drone.tscn,
+## Must be called once right after instantiating res://Scenes/Basic_drone.tscn,
 ## before deploying it.
 func setup(type: DroneType):
 	drone_type = type
@@ -89,11 +90,6 @@ func take_damage(amount: int):
 		play_defeated_animation()
 	else:
 		play_hit_animation()
-
-
-func _draw():
-	draw_circle(Vector2.ZERO, RADIUS, COLOR)
-	draw_arc(Vector2.ZERO, RADIUS, 0, TAU, 32, Color.BLACK, 2.0)
 
 
 ## Loops for as long as nothing else is playing — the drone's resting look.

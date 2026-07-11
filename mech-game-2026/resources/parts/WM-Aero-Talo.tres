@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="Part" format=3 uid="uid://4lo5tipsx0ho"]
+
+[ext_resource type="Resource" uid="uid://dxtek32n1seda" path="res://resources/Drones/Missile_Drone.tres" id="1_fbfqn"]
+[ext_resource type="Script" uid="uid://dve8mgkmjhqqp" path="res://scripts/Part.gd" id="1_x1unt"]
+
+[resource]
+script = ExtResource("1_x1unt")
+drone_type = ExtResource("1_fbfqn")
+max_drones = 2
+display_level_tag = "X"
+display_name = "AERO-TALO"
+Description = "Drone missle compatrment"
+flight = true
+bonus_hp = 2
+metadata/_custom_type_script = "uid://dve8mgkmjhqqp"

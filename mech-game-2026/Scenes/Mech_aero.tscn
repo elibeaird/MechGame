@@ -1,0 +1,366 @@
+[gd_scene format=3 uid="uid://ck8xfq7k5w6fb"]
+
+[ext_resource type="Script" uid="uid://bleyam3ciln0r" path="res://scripts/mech.gd" id="1_6ojnq"]
+[ext_resource type="Texture2D" uid="uid://b8pq6olppl276" path="res://images/animations/melee_hit_1.png" id="2_x8se6"]
+[ext_resource type="Texture2D" uid="uid://dm12agosh80tp" path="res://images/animations/melee_hit_2.png" id="3_8dc7w"]
+[ext_resource type="Texture2D" uid="uid://7gu2amprd15f" path="res://images/animations/melee_hit_3.png" id="4_xxid4"]
+[ext_resource type="Texture2D" uid="uid://cppqw4k3qrrb6" path="res://images/animations/range_hit_1.png" id="5_jr126"]
+[ext_resource type="Texture2D" uid="uid://dsx4nbu6nf3e8" path="res://images/animations/range_hit_2.png" id="6_38god"]
+[ext_resource type="Texture2D" uid="uid://djaktp6c10fb5" path="res://images/animations/range_hit_3.png" id="7_jlfr7"]
+[ext_resource type="Script" uid="uid://cv74mnvlqboev" path="res://scripts/FacingArrow.gd" id="8_mdj3x"]
+[ext_resource type="Texture2D" uid="uid://b6mrkgk0wsvc0" path="res://images/animations/mech_defeat_1.png" id="9_cqxqy"]
+[ext_resource type="Texture2D" uid="uid://bn45w8tq0opgn" path="res://images/animations/mech_defeat_2.png" id="10_tucdv"]
+[ext_resource type="Texture2D" uid="uid://4e8pqorc0y7n" path="res://images/animations/mech_defeat_3.png" id="11_h1ic6"]
+[ext_resource type="Texture2D" uid="uid://cnkihj0dmxm18" path="res://images/animations/mech_defeat_4.png" id="12_0ov3j"]
+[ext_resource type="Texture2D" uid="uid://cgvupmp6ev2ev" path="res://images/PixelArt/mech_Aero1.png" id="13_g0cfd"]
+[ext_resource type="Texture2D" uid="uid://cv1t46e63gbjw" path="res://images/PixelArt/mech_Aero2.png" id="14_bhpt8"]
+[ext_resource type="Texture2D" uid="uid://cj25asforxfme" path="res://images/PixelArt/mech_Aero6.png" id="15_3ckt3"]
+[ext_resource type="Texture2D" uid="uid://y3luyu34tv6q" path="res://images/PixelArt/mech_Aero3.png" id="16_r0p7h"]
+[ext_resource type="Texture2D" uid="uid://ca70jaap44nf" path="res://images/PixelArt/mech_Aero4.png" id="17_dy63h"]
+[ext_resource type="Texture2D" uid="uid://0ashpcab7tmi" path="res://images/PixelArt/mech_Aero5.png" id="18_0387p"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_attack_effect"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("2_x8se6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("3_8dc7w")
+}, {
+"duration": 1.0,
+"texture": ExtResource("4_xxid4")
+}],
+"loop": 0,
+"name": &"melee_attack",
+"speed": 8.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("5_jr126")
+}, {
+"duration": 1.0,
+"texture": ExtResource("6_38god")
+}, {
+"duration": 1.0,
+"texture": ExtResource("7_jlfr7")
+}],
+"loop": 0,
+"name": &"ranged_attack",
+"speed": 8.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_body_right"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("9_cqxqy")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_tucdv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_tucdv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_h1ic6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_h1ic6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_0ov3j")
+}],
+"loop": 0,
+"name": &"defeated",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("13_g0cfd")
+}],
+"loop": 0,
+"name": &"hit",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("13_g0cfd")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 5.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_body_upper_right"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("9_cqxqy")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_tucdv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_tucdv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_h1ic6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_h1ic6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_0ov3j")
+}],
+"loop": 0,
+"name": &"defeated",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("14_bhpt8")
+}],
+"loop": 0,
+"name": &"hit",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("14_bhpt8")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 5.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_body_lower_right"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("9_cqxqy")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_tucdv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_tucdv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_h1ic6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_h1ic6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_0ov3j")
+}],
+"loop": 0,
+"name": &"defeated",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("15_3ckt3")
+}],
+"loop": 0,
+"name": &"hit",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("15_3ckt3")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 5.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_body_upper_left"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("9_cqxqy")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_tucdv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_tucdv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_h1ic6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_h1ic6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_0ov3j")
+}],
+"loop": 0,
+"name": &"defeated",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("16_r0p7h")
+}],
+"loop": 0,
+"name": &"hit",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("16_r0p7h")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 5.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_body_left"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("9_cqxqy")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_tucdv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_tucdv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_h1ic6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_h1ic6")
+}],
+"loop": 0,
+"name": &"defeated",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("17_dy63h")
+}],
+"loop": 0,
+"name": &"hit",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("17_dy63h")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 5.0
+}]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_body_lower_left"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("9_cqxqy")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_tucdv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("10_tucdv")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_h1ic6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_h1ic6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_0ov3j")
+}],
+"loop": 0,
+"name": &"defeated",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("18_0387p")
+}],
+"loop": 0,
+"name": &"hit",
+"speed": 5.0
+}, {
+"frames": [{
+"duration": 1.0,
+"texture": ExtResource("18_0387p")
+}],
+"loop": 1,
+"name": &"idle",
+"speed": 5.0
+}]
+
+[node name="mech" type="Node2D" unique_id=429761759]
+scale = Vector2(1.5, 1.5)
+script = ExtResource("1_6ojnq")
+
+[node name="AttackEffect" type="AnimatedSprite2D" parent="." unique_id=768543483]
+visible = false
+z_index = 5
+sprite_frames = SubResource("SpriteFrames_attack_effect")
+animation = &"ranged_attack"
+
+[node name="FacingArrow" type="Node2D" parent="." unique_id=1512634847]
+z_index = -1
+script = ExtResource("8_mdj3x")
+base_offset = 38.0
+
+[node name="BodyRight" type="AnimatedSprite2D" parent="." unique_id=731730465]
+scale = Vector2(0.36625, 0.36625)
+sprite_frames = SubResource("SpriteFrames_body_right")
+animation = &"idle"
+
+[node name="BodyUpperRight" type="AnimatedSprite2D" parent="." unique_id=1572332409]
+visible = false
+scale = Vector2(0.36625, 0.36625)
+sprite_frames = SubResource("SpriteFrames_body_upper_right")
+animation = &"hit"
+
+[node name="BodyLowerRight" type="AnimatedSprite2D" parent="." unique_id=833387710]
+visible = false
+scale = Vector2(0.36625, 0.36625)
+sprite_frames = SubResource("SpriteFrames_body_lower_right")
+animation = &"hit"
+
+[node name="BodyUpperLeft" type="AnimatedSprite2D" parent="." unique_id=1649962980]
+visible = false
+scale = Vector2(0.36625, 0.36625)
+sprite_frames = SubResource("SpriteFrames_body_upper_left")
+animation = &"hit"
+
+[node name="BodyLeft" type="AnimatedSprite2D" parent="." unique_id=1780453636]
+visible = false
+scale = Vector2(0.36625, 0.36625)
+sprite_frames = SubResource("SpriteFrames_body_left")
+animation = &"hit"
+
+[node name="BodyLowerLeft" type="AnimatedSprite2D" parent="." unique_id=1091336711]
+visible = false
+scale = Vector2(0.36625, 0.36625)
+sprite_frames = SubResource("SpriteFrames_body_lower_left")
+animation = &"idle"
+
+[node name="HealthBarBg" type="ColorRect" parent="." unique_id=1926490180]
+offset_left = -16.666666
+offset_top = 27.333332
+offset_right = 23.333334
+offset_bottom = 33.333332
+color = Color(0.15, 0.15, 0.15, 0.9)
+
+[node name="HealthBarFill" type="ColorRect" parent="." unique_id=632327068]
+offset_left = -17.333334
+offset_top = 26.666666
+offset_right = 22.666666
+offset_bottom = 32.666664
+color = Color(0.2, 0.8, 0.2, 1)
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=816962848]

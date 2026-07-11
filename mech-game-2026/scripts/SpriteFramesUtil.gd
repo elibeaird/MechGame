@@ -37,6 +37,21 @@ static func extract_sprite_frames(scene: PackedScene) -> SpriteFrames:
 	instance.free()
 	return frames
 
+## Instantiates scene and returns the SpriteFrames on the child node named
+## node_name (e.g. "BodyRight") — for scenes with several independent
+## AnimatedSprite2D nodes (see mech.gd's chassis_visual), where
+## extract_sprite_frames()'s "grab whichever one is first" wouldn't
+## necessarily pick the right one. Null if scene is null, has no such node,
+## or that node isn't an AnimatedSprite2D.
+static func extract_named_sprite_frames(scene: PackedScene, node_name: String) -> SpriteFrames:
+	if scene == null:
+		return null
+	var instance := scene.instantiate()
+	var node := instance.get_node_or_null(node_name)
+	var frames : SpriteFrames = node.sprite_frames if node is AnimatedSprite2D else null
+	instance.free()
+	return frames
+
 static func _find_animated_sprite(node: Node) -> AnimatedSprite2D:
 	if node is AnimatedSprite2D:
 		return node

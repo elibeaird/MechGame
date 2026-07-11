@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="DroneType" format=3 uid="uid://fwi3qx8kkgfw"]
 
 [ext_resource type="Script" uid="uid://d3fscaf7ua3mc" path="res://scripts/DroneType.gd" id="1_hvk44"]
-[ext_resource type="PackedScene" uid="uid://dj47f8ru4pxng" path="res://Scenes/drone.tscn" id="2_3wwes"]
+[ext_resource type="PackedScene" uid="uid://dj47f8ru4pxng" path="res://Scenes/Drone_basic.tscn" id="2_3wwes"]
 
 [resource]
 script = ExtResource("1_hvk44")

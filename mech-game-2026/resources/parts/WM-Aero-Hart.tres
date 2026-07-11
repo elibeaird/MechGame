@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="Part" format=3 uid="uid://cpfnix52gerv6"]
+
+[ext_resource type="Script" uid="uid://dve8mgkmjhqqp" path="res://scripts/Part.gd" id="1_0q4yk"]
+
+[resource]
+script = ExtResource("1_0q4yk")
+max_drones = 0
+can_react = true
+display_level_tag = "2"
+purple_dice = 1
+bonus_hp = 2
+required_level = 2
+metadata/_custom_type_script = "uid://dve8mgkmjhqqp"

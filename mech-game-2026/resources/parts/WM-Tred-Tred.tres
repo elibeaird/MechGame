@@ -1,0 +1,13 @@
+[gd_resource type="Resource" script_class="Part" format=3 uid="uid://dxhdewxckjhur"]
+
+[ext_resource type="Script" uid="uid://dve8mgkmjhqqp" path="res://scripts/Part.gd" id="1_gw6d8"]
+
+[resource]
+script = ExtResource("1_gw6d8")
+max_drones = 0
+display_level_tag = "2"
+display_name = "TRED-TRED"
+movement = 4
+bonus_hp = 3
+required_level = 2
+metadata/_custom_type_script = "uid://dve8mgkmjhqqp"

@@ -2,7 +2,8 @@
 
 [ext_resource type="Script" uid="uid://5dss30bvatpu" path="res://scripts/Game_Manager.gd" id="1_bo1nx"]
 [ext_resource type="PackedScene" uid="uid://y8o3ld63x6fs" path="res://Scenes/mech.tscn" id="2_8gbba"]
-[ext_resource type="Resource" path="res://resources/Levels/hill_arena.tres" id="2_hibaj"]
+[ext_resource type="Resource" uid="uid://dhwhjgqbk41q8" path="res://resources/Levels/hill_arena.tres" id="2_hibaj"]
+[ext_resource type="PackedScene" uid="uid://bg40srk8pilyb" path="res://Scenes/Mech_Tera.tscn" id="2_tera"]
 [ext_resource type="Script" uid="uid://dve8mgkmjhqqp" path="res://scripts/Part.gd" id="3_part"]
 [ext_resource type="Resource" uid="uid://cbergeohh5bht" path="res://resources/parts/WM-Aqua_Claw.tres" id="5_claw"]
 [ext_resource type="Resource" uid="uid://bj00v6q8ifn3y" path="res://resources/parts/WM-Aqua-Rech.tres" id="5_hptm8"]
@@ -11,6 +12,7 @@
 [ext_resource type="Resource" uid="uid://cw4g1d72bnr84" path="res://resources/parts/WM-Aqua_Wave.tres" id="8_d1ilt"]
 [ext_resource type="Resource" path="res://resources/AI/Archer.tres" id="9_hptm8"]
 [ext_resource type="PackedScene" path="res://Scenes/connect_screen.tscn" id="10_connect"]
+[ext_resource type="PackedScene" uid="uid://dj6un2gocj0oi" path="res://Scenes/Mech_Aqua.tscn" id="11_ee4r6"]
 [ext_resource type="Texture2D" uid="uid://c3j5hyymw2f82" path="res://images/ui/map_frame.png" id="20_frame"]
 [ext_resource type="Texture2D" uid="uid://dbm352boo4b67" path="res://images/ui/panel_move.png" id="21_panelmove"]
 [ext_resource type="Texture2D" uid="uid://ck47bsnyf3o57" path="res://images/ui/panel_second_action.png" id="22_panelsecond"]
@@ -103,12 +105,14 @@ default_color = Color(1, 0.9, 0.2, 0.85)
 [node name="player_mech" parent="UI/WorldViewportContainer/WorldViewport" unique_id=429761759 instance=ExtResource("2_8gbba")]
 is_player = true
 hex_coord = Vector2i(1, 5)
+chassis_visual = ExtResource("2_tera")
 
 [node name="ai_mech" parent="UI/WorldViewportContainer/WorldViewport" unique_id=1684661054 instance=ExtResource("2_8gbba")]
 parts = Array[ExtResource("3_part")]([ExtResource("5_hptm8"), ExtResource("5_ynf5e"), ExtResource("5_claw"), ExtResource("8_d1ilt")])
 hex_coord = Vector2i(8, 5)
 facing = 3
 ai_behavior = ExtResource("9_hptm8")
+chassis_visual = ExtResource("11_ee4r6")
 
 [node name="FrameBackground" type="TextureRect" parent="UI" unique_id=756005615]
 anchors_preset = 15
@@ -451,6 +455,23 @@ horizontal_alignment = 1
 [node name="WeaponList" type="VBoxContainer" parent="UI/AttackWeaponPopup/VBoxContainer" unique_id=1430792168]
 layout_mode = 2
 
+[node name="DroneTypePopup" type="PopupPanel" parent="UI" unique_id=1379310848]
+size = Vector2i(260, 220)
+
+[node name="VBoxContainer" type="VBoxContainer" parent="UI/DroneTypePopup" unique_id=1180939685]
+offset_left = 4.0
+offset_top = 4.0
+offset_right = 256.0
+offset_bottom = 216.0
+
+[node name="TitleLabel" type="Label" parent="UI/DroneTypePopup/VBoxContainer" unique_id=603283692]
+layout_mode = 2
+text = "Choose Drone Type"
+horizontal_alignment = 1
+
+[node name="DroneTypeList" type="VBoxContainer" parent="UI/DroneTypePopup/VBoxContainer" unique_id=1430792169]
+layout_mode = 2
+
 [node name="OverdrivePopup" type="PopupPanel" parent="UI" unique_id=520817082]
 size = Vector2i(260, 220)
 
@@ -602,6 +623,17 @@ theme_override_constants/margin_bottom = 14
 [node name="RightVBox" type="VBoxContainer" parent="LoadoutLayer/CenterContainer/PanelContainer/VBoxContainer/ContentRow/RightColumn/RightMargin" unique_id=1314939761]
 layout_mode = 2
 alignment = 1
+theme_override_constants/separation = 16
+
+[node name="PresetLabel" type="Label" parent="LoadoutLayer/CenterContainer/PanelContainer/VBoxContainer/ContentRow/RightColumn/RightMargin/RightVBox" unique_id=1266428616]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Quick Loadouts"
+horizontal_alignment = 1
+
+[node name="PresetList" type="VBoxContainer" parent="LoadoutLayer/CenterContainer/PanelContainer/VBoxContainer/ContentRow/RightColumn/RightMargin/RightVBox" unique_id=1266428617]
+layout_mode = 2
+theme_override_constants/separation = 8
 
 [node name="LoadoutStartMatchButton" type="Button" parent="LoadoutLayer/CenterContainer/PanelContainer/VBoxContainer/ContentRow/RightColumn/RightMargin/RightVBox" unique_id=1266428615]
 custom_minimum_size = Vector2(0, 64)
