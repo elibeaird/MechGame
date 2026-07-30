@@ -1,15 +1,16 @@
 [gd_scene format=3 uid="uid://b81e65vh3c7jp"]
 
 [ext_resource type="Script" uid="uid://buorp3mhibiyn" path="res://scripts/Drone.gd" id="1_shbss"]
-[ext_resource type="Texture2D" uid="uid://ds6bgpbh321ob" path="res://images/animations/drone_defeat_2.png" id="2_ih7gd"]
-[ext_resource type="Texture2D" uid="uid://ox2q2426wjhl" path="res://images/animations/drone_defeat_1.png" id="3_obhco"]
-[ext_resource type="Texture2D" uid="uid://2o4xiry10t3d" path="res://images/animations/drone_defeat_3.png" id="4_5i5m1"]
-[ext_resource type="Texture2D" uid="uid://bd704hdysvrxb" path="res://images/animations/drone_deploy_1.png" id="5_hjoj1"]
-[ext_resource type="Texture2D" uid="uid://bn1b1ttl1x4s" path="res://images/animations/drone_deploy_2.png" id="6_k6eue"]
-[ext_resource type="Texture2D" uid="uid://ggfi7cf6vikc" path="res://images/animations/drone_deploy_3.png" id="7_syr40"]
+[ext_resource type="Texture2D" uid="uid://b7bqwpwacxc7n" path="res://images/PixelArt/Drone_defeat5.png" id="2_ih7gd"]
+[ext_resource type="Texture2D" uid="uid://dt7ya83udu3d5" path="res://images/PixelArt/Mech_defeat7.png" id="3_ih7gd"]
+[ext_resource type="Texture2D" uid="uid://chya1xxmjf4qo" path="res://images/PixelArt/Drone_defeat6.png" id="4_obhco"]
+[ext_resource type="Texture2D" uid="uid://hagiwmu05asx" path="res://images/PixelArt/Mech_defeat4.png" id="6_hjoj1"]
+[ext_resource type="Texture2D" uid="uid://d0qd2ewi1lwc7" path="res://images/PixelArt/Mech_defeat5.png" id="7_k6eue"]
 [ext_resource type="Texture2D" uid="uid://85ccni0qxo54" path="res://images/PixelArt/Drone_Missle2.png" id="8_ocde6"]
+[ext_resource type="Texture2D" uid="uid://hxsm6d4k3e42" path="res://images/PixelArt/Mech_defeat6.png" id="8_syr40"]
 [ext_resource type="Texture2D" uid="uid://c02pcqpxkjpu4" path="res://images/PixelArt/Drone_Missle1.png" id="9_spitd"]
 [ext_resource type="Texture2D" uid="uid://b8vl0e6voxr6a" path="res://images/PixelArt/Drone_Missle3.png" id="10_cmhck"]
+[ext_resource type="Texture2D" uid="uid://dowcnns3du2ab" path="res://images/PixelArt/Drone_Missle5.png" id="11_5i5m1"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_drone_body"]
 animations = [{
@@ -23,13 +24,13 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("3_obhco")
+"texture": ExtResource("3_ih7gd")
 }, {
 "duration": 1.0,
 "texture": ExtResource("2_ih7gd")
 }, {
 "duration": 1.0,
-"texture": ExtResource("4_5i5m1")
+"texture": ExtResource("4_obhco")
 }],
 "loop": 0,
 "name": &"defeated",
@@ -37,13 +38,13 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("5_hjoj1")
+"texture": ExtResource("6_hjoj1")
 }, {
 "duration": 1.0,
-"texture": ExtResource("6_k6eue")
+"texture": ExtResource("7_k6eue")
 }, {
 "duration": 1.0,
-"texture": ExtResource("7_syr40")
+"texture": ExtResource("8_syr40")
 }],
 "loop": 0,
 "name": &"deploy",
@@ -77,6 +78,9 @@ animations = [{
 "frames": [{
 "duration": 1.0,
 "texture": ExtResource("8_ocde6")
+}, {
+"duration": 1.0,
+"texture": ExtResource("11_5i5m1")
 }],
 "loop": 0,
 "name": &"move",

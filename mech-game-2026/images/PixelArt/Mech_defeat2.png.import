@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://citr5gjrqn763"
-path="res://.godot/imported/mech_Aero1.png-fa04c9ae4c9f6e0b7f96687a708a633c.ctex"
+uid="uid://e3xhc72yybq1"
+path="res://.godot/imported/Mech_defeat2.png-83db867b48f5df54f1a2162b1bf9438d.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://images/PixelArt/mech_Aero1.png"
-dest_files=["res://.godot/imported/mech_Aero1.png-fa04c9ae4c9f6e0b7f96687a708a633c.ctex"]
+source_file="res://images/PixelArt/Mech_defeat2.png"
+dest_files=["res://.godot/imported/Mech_defeat2.png-83db867b48f5df54f1a2162b1bf9438d.ctex"]
 
 [params]
 

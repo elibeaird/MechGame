@@ -1,40 +1,40 @@
-[gd_scene format=3 uid="uid://dj6un2gocj0oi"]
+[gd_scene format=3 uid="uid://c5atnma7pnji7"]
 
-[ext_resource type="Script" uid="uid://bleyam3ciln0r" path="res://scripts/mech.gd" id="1_nlnuq"]
-[ext_resource type="Texture2D" uid="uid://dd4ei7gxqm6g7" path="res://images/PixelArt/Mech_attack1.png" id="2_rq7os"]
-[ext_resource type="Texture2D" uid="uid://bxyyciukt6gdo" path="res://images/PixelArt/Mech_attack2.png" id="3_xgqun"]
-[ext_resource type="Texture2D" uid="uid://d2124ull20rwp" path="res://images/PixelArt/Mech_attack3.png" id="4_eeks0"]
-[ext_resource type="Texture2D" uid="uid://xhu2mle2llpe" path="res://images/PixelArt/Mech_attack4.png" id="5_wr40h"]
-[ext_resource type="Texture2D" uid="uid://dvsrpdks0omm8" path="res://images/PixelArt/Mech_attack5.png" id="6_u3030"]
-[ext_resource type="Texture2D" uid="uid://gjrt7p7smu44" path="res://images/PixelArt/Mech_attack6.png" id="7_uvlhm"]
-[ext_resource type="Texture2D" uid="uid://btur2wm41dk22" path="res://images/PixelArt/Mech_attack7.png" id="8_efsld"]
-[ext_resource type="Script" uid="uid://cv74mnvlqboev" path="res://scripts/FacingArrow.gd" id="8_uvlhm"]
-[ext_resource type="Texture2D" uid="uid://dsd3rxxcqujrd" path="res://images/PixelArt/Mech_defeat1.png" id="9_bcb33"]
-[ext_resource type="Texture2D" uid="uid://bfx7pcwksmmsy" path="res://images/PixelArt/Mech_attack8.png" id="9_j2mbc"]
-[ext_resource type="Texture2D" uid="uid://e3xhc72yybq1" path="res://images/PixelArt/Mech_defeat2.png" id="10_nlnuq"]
-[ext_resource type="Texture2D" uid="uid://bhvmanrgluslk" path="res://images/PixelArt/Mech_attack9.png" id="10_tp8lc"]
-[ext_resource type="Texture2D" uid="uid://voyyb3t4lc8c" path="res://images/PixelArt/Mech_defeat3.png" id="11_rqutb"]
-[ext_resource type="Texture2D" uid="uid://b11ad0er7w37s" path="res://images/PixelArt/mech_Aqua1.png" id="13_nlnuq"]
-[ext_resource type="Texture2D" uid="uid://u3godgwkrfq8" path="res://images/PixelArt/mech_Aqua2.png" id="14_rqutb"]
-[ext_resource type="Texture2D" uid="uid://b5ie1b6g3hret" path="res://images/PixelArt/mech_Aqua6.png" id="15_rq7os"]
-[ext_resource type="Texture2D" uid="uid://cbbejyfikssrx" path="res://images/PixelArt/mech_Aqua3.png" id="16_xgqun"]
-[ext_resource type="Texture2D" uid="uid://c4fft70xoxm0w" path="res://images/PixelArt/mech_Aqua4.png" id="17_eeks0"]
-[ext_resource type="Texture2D" uid="uid://dy4ly8fof0rjg" path="res://images/PixelArt/mech_Aqua5.png" id="18_wr40h"]
+[ext_resource type="Script" uid="uid://bleyam3ciln0r" path="res://scripts/mech.gd" id="1_i8oti"]
+[ext_resource type="Texture2D" uid="uid://dd4ei7gxqm6g7" path="res://images/PixelArt/Mech_attack1.png" id="2_e3l6i"]
+[ext_resource type="Texture2D" uid="uid://bxyyciukt6gdo" path="res://images/PixelArt/Mech_attack2.png" id="3_372wi"]
+[ext_resource type="Texture2D" uid="uid://d2124ull20rwp" path="res://images/PixelArt/Mech_attack3.png" id="4_6jq5f"]
+[ext_resource type="Texture2D" uid="uid://xhu2mle2llpe" path="res://images/PixelArt/Mech_attack4.png" id="5_gyyj7"]
+[ext_resource type="Texture2D" uid="uid://dvsrpdks0omm8" path="res://images/PixelArt/Mech_attack5.png" id="6_a78sh"]
+[ext_resource type="Texture2D" uid="uid://gjrt7p7smu44" path="res://images/PixelArt/Mech_attack6.png" id="7_nvk4x"]
+[ext_resource type="Texture2D" uid="uid://btur2wm41dk22" path="res://images/PixelArt/Mech_attack7.png" id="8_6lhar"]
+[ext_resource type="Script" uid="uid://cv74mnvlqboev" path="res://scripts/FacingArrow.gd" id="8_a78sh"]
+[ext_resource type="Texture2D" uid="uid://bfx7pcwksmmsy" path="res://images/PixelArt/Mech_attack8.png" id="9_4elib"]
+[ext_resource type="Texture2D" uid="uid://dsd3rxxcqujrd" path="res://images/PixelArt/Mech_defeat1.png" id="9_nvk4x"]
+[ext_resource type="Texture2D" uid="uid://e3xhc72yybq1" path="res://images/PixelArt/Mech_defeat2.png" id="10_6lhar"]
+[ext_resource type="Texture2D" uid="uid://bhvmanrgluslk" path="res://images/PixelArt/Mech_attack9.png" id="10_arnsn"]
+[ext_resource type="Texture2D" uid="uid://voyyb3t4lc8c" path="res://images/PixelArt/Mech_defeat3.png" id="11_4elib"]
+[ext_resource type="Texture2D" uid="uid://dvoe636feltri" path="res://images/PixelArt/mech_tred1.png" id="12_i8oti"]
+[ext_resource type="Texture2D" uid="uid://bwusdccqvt5ya" path="res://images/PixelArt/mech_tred2.png" id="13_l1ipq"]
+[ext_resource type="Texture2D" uid="uid://bepcjet3syvk1" path="res://images/PixelArt/mech_tred6.png" id="14_fq82h"]
+[ext_resource type="Texture2D" uid="uid://dy6m4sqspwte" path="res://images/PixelArt/mech_tred3.png" id="15_e3l6i"]
+[ext_resource type="Texture2D" uid="uid://v2pyg6exf3q2" path="res://images/PixelArt/mech_tred4.png" id="16_372wi"]
+[ext_resource type="Texture2D" uid="uid://cdrg3qg5ym5ik" path="res://images/PixelArt/mech_tred5.png" id="17_6jq5f"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_attack_effect"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("2_rq7os")
+"texture": ExtResource("2_e3l6i")
 }, {
 "duration": 1.0,
-"texture": ExtResource("3_xgqun")
+"texture": ExtResource("3_372wi")
 }, {
 "duration": 1.0,
-"texture": ExtResource("4_eeks0")
+"texture": ExtResource("4_6jq5f")
 }, {
 "duration": 1.0,
-"texture": ExtResource("5_wr40h")
+"texture": ExtResource("5_gyyj7")
 }],
 "loop": 0,
 "name": &"melee_attack",
@@ -42,19 +42,19 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("6_u3030")
+"texture": ExtResource("6_a78sh")
 }, {
 "duration": 1.0,
-"texture": ExtResource("7_uvlhm")
+"texture": ExtResource("7_nvk4x")
 }, {
 "duration": 1.0,
-"texture": ExtResource("8_efsld")
+"texture": ExtResource("8_6lhar")
 }, {
 "duration": 1.0,
-"texture": ExtResource("9_j2mbc")
+"texture": ExtResource("9_4elib")
 }, {
 "duration": 1.0,
-"texture": ExtResource("10_tp8lc")
+"texture": ExtResource("10_arnsn")
 }],
 "loop": 0,
 "name": &"ranged_attack",
@@ -65,13 +65,13 @@ animations = [{
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("9_bcb33")
+"texture": ExtResource("9_nvk4x")
 }, {
 "duration": 1.0,
-"texture": ExtResource("10_nlnuq")
+"texture": ExtResource("10_6lhar")
 }, {
 "duration": 1.0,
-"texture": ExtResource("11_rqutb")
+"texture": ExtResource("11_4elib")
 }],
 "loop": 0,
 "name": &"defeated",
@@ -79,7 +79,7 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("13_nlnuq")
+"texture": ExtResource("12_i8oti")
 }],
 "loop": 0,
 "name": &"hit",
@@ -87,7 +87,7 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("13_nlnuq")
+"texture": ExtResource("12_i8oti")
 }],
 "loop": 1,
 "name": &"idle",
@@ -98,13 +98,13 @@ animations = [{
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("9_bcb33")
+"texture": ExtResource("9_nvk4x")
 }, {
 "duration": 1.0,
-"texture": ExtResource("10_nlnuq")
+"texture": ExtResource("10_6lhar")
 }, {
 "duration": 1.0,
-"texture": ExtResource("11_rqutb")
+"texture": ExtResource("11_4elib")
 }],
 "loop": 0,
 "name": &"defeated",
@@ -112,7 +112,7 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("14_rqutb")
+"texture": ExtResource("13_l1ipq")
 }],
 "loop": 0,
 "name": &"hit",
@@ -120,7 +120,7 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("14_rqutb")
+"texture": ExtResource("13_l1ipq")
 }],
 "loop": 1,
 "name": &"idle",
@@ -131,13 +131,13 @@ animations = [{
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("9_bcb33")
+"texture": ExtResource("9_nvk4x")
 }, {
 "duration": 1.0,
-"texture": ExtResource("10_nlnuq")
+"texture": ExtResource("10_6lhar")
 }, {
 "duration": 1.0,
-"texture": ExtResource("11_rqutb")
+"texture": ExtResource("11_4elib")
 }],
 "loop": 0,
 "name": &"defeated",
@@ -145,7 +145,7 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("15_rq7os")
+"texture": ExtResource("14_fq82h")
 }],
 "loop": 0,
 "name": &"hit",
@@ -153,7 +153,7 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("15_rq7os")
+"texture": ExtResource("14_fq82h")
 }],
 "loop": 1,
 "name": &"idle",
@@ -164,13 +164,13 @@ animations = [{
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("9_bcb33")
+"texture": ExtResource("9_nvk4x")
 }, {
 "duration": 1.0,
-"texture": ExtResource("10_nlnuq")
+"texture": ExtResource("10_6lhar")
 }, {
 "duration": 1.0,
-"texture": ExtResource("11_rqutb")
+"texture": ExtResource("11_4elib")
 }],
 "loop": 0,
 "name": &"defeated",
@@ -178,7 +178,7 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("16_xgqun")
+"texture": ExtResource("15_e3l6i")
 }],
 "loop": 0,
 "name": &"hit",
@@ -186,7 +186,7 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("16_xgqun")
+"texture": ExtResource("15_e3l6i")
 }],
 "loop": 1,
 "name": &"idle",
@@ -197,13 +197,13 @@ animations = [{
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("9_bcb33")
+"texture": ExtResource("9_nvk4x")
 }, {
 "duration": 1.0,
-"texture": ExtResource("10_nlnuq")
+"texture": ExtResource("10_6lhar")
 }, {
 "duration": 1.0,
-"texture": ExtResource("11_rqutb")
+"texture": ExtResource("11_4elib")
 }],
 "loop": 0,
 "name": &"defeated",
@@ -211,7 +211,7 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("17_eeks0")
+"texture": ExtResource("16_372wi")
 }],
 "loop": 0,
 "name": &"hit",
@@ -219,7 +219,7 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("17_eeks0")
+"texture": ExtResource("16_372wi")
 }],
 "loop": 1,
 "name": &"idle",
@@ -230,13 +230,13 @@ animations = [{
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("9_bcb33")
+"texture": ExtResource("9_nvk4x")
 }, {
 "duration": 1.0,
-"texture": ExtResource("10_nlnuq")
+"texture": ExtResource("10_6lhar")
 }, {
 "duration": 1.0,
-"texture": ExtResource("11_rqutb")
+"texture": ExtResource("11_4elib")
 }],
 "loop": 0,
 "name": &"defeated",
@@ -244,7 +244,7 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("18_wr40h")
+"texture": ExtResource("17_6jq5f")
 }],
 "loop": 0,
 "name": &"hit",
@@ -252,7 +252,7 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("18_wr40h")
+"texture": ExtResource("17_6jq5f")
 }],
 "loop": 1,
 "name": &"idle",
@@ -260,54 +260,54 @@ animations = [{
 }]
 
 [node name="mech" type="Node2D" unique_id=429761759]
-scale = Vector2(1.5, 1.5)
-script = ExtResource("1_nlnuq")
+scale = Vector2(5, 5)
+script = ExtResource("1_i8oti")
 
 [node name="AttackEffect" type="AnimatedSprite2D" parent="." unique_id=768543483]
 visible = false
 z_index = 5
 sprite_frames = SubResource("SpriteFrames_attack_effect")
-animation = &"ranged_attack"
+animation = &"melee_attack"
 
 [node name="FacingArrow" type="Node2D" parent="." unique_id=1512634847]
 z_index = -1
-script = ExtResource("8_uvlhm")
+script = ExtResource("8_a78sh")
 base_offset = 38.0
 
 [node name="BodyRight" type="AnimatedSprite2D" parent="." unique_id=731730465]
 scale = Vector2(0.36625, 0.36625)
 sprite_frames = SubResource("SpriteFrames_body_right")
-animation = &"defeated"
+animation = &"idle"
 
 [node name="BodyUpperRight" type="AnimatedSprite2D" parent="." unique_id=1572332409]
 visible = false
 scale = Vector2(0.36625, 0.36625)
 sprite_frames = SubResource("SpriteFrames_body_upper_right")
-animation = &"defeated"
+animation = &"idle"
 
 [node name="BodyLowerRight" type="AnimatedSprite2D" parent="." unique_id=833387710]
 visible = false
 scale = Vector2(0.36625, 0.36625)
 sprite_frames = SubResource("SpriteFrames_body_lower_right")
-animation = &"defeated"
+animation = &"idle"
 
 [node name="BodyUpperLeft" type="AnimatedSprite2D" parent="." unique_id=1649962980]
 visible = false
 scale = Vector2(0.36625, 0.36625)
 sprite_frames = SubResource("SpriteFrames_body_upper_left")
-animation = &"defeated"
+animation = &"idle"
 
 [node name="BodyLeft" type="AnimatedSprite2D" parent="." unique_id=1780453636]
 visible = false
 scale = Vector2(0.36625, 0.36625)
 sprite_frames = SubResource("SpriteFrames_body_left")
-animation = &"defeated"
+animation = &"idle"
 
 [node name="BodyLowerLeft" type="AnimatedSprite2D" parent="." unique_id=1091336711]
 visible = false
 scale = Vector2(0.36625, 0.36625)
 sprite_frames = SubResource("SpriteFrames_body_lower_left")
-animation = &"defeated"
+animation = &"idle"
 
 [node name="HealthBarBg" type="ColorRect" parent="." unique_id=1926490180]
 offset_left = -16.666666

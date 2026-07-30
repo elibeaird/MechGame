@@ -1,21 +1,23 @@
 [gd_scene format=3 uid="uid://dj47f8ru4pxng"]
 
 [ext_resource type="Script" uid="uid://buorp3mhibiyn" path="res://scripts/Drone.gd" id="1_drone"]
-[ext_resource type="Texture2D" uid="uid://cq26rbjoejes6" path="res://images/PixelArt/basicDrone2.png" id="2_k7qk7"]
-[ext_resource type="Texture2D" uid="uid://ox2q2426wjhl" path="res://images/animations/drone_defeat_1.png" id="3_2mi5k"]
-[ext_resource type="Texture2D" uid="uid://ds6bgpbh321ob" path="res://images/animations/drone_defeat_2.png" id="4_dumd5"]
-[ext_resource type="Texture2D" uid="uid://2o4xiry10t3d" path="res://images/animations/drone_defeat_3.png" id="5_v1lik"]
-[ext_resource type="Texture2D" uid="uid://bd704hdysvrxb" path="res://images/animations/drone_deploy_1.png" id="6_tk1j0"]
-[ext_resource type="Texture2D" uid="uid://bn1b1ttl1x4s" path="res://images/animations/drone_deploy_2.png" id="7_ej2mc"]
-[ext_resource type="Texture2D" uid="uid://ggfi7cf6vikc" path="res://images/animations/drone_deploy_3.png" id="8_hclyb"]
-[ext_resource type="Texture2D" uid="uid://cac00aslqyr40" path="res://images/PixelArt/basicDrone1.png" id="9_7kqe7"]
-[ext_resource type="Texture2D" uid="uid://8ag6a8pkaoxa" path="res://images/PixelArt/basicDrone3.png" id="10_adwuj"]
+[ext_resource type="Texture2D" uid="uid://caaf7s634rby0" path="res://images/PixelArt/Mech_defeat8.png" id="3_44pld"]
+[ext_resource type="Texture2D" uid="uid://0gk0ngph3iht" path="res://images/PixelArt/Drone_defeat4.png" id="3_cp30j"]
+[ext_resource type="Texture2D" uid="uid://b7bqwpwacxc7n" path="res://images/PixelArt/Drone_defeat5.png" id="4_u7jhg"]
+[ext_resource type="Texture2D" uid="uid://chya1xxmjf4qo" path="res://images/PixelArt/Drone_defeat6.png" id="5_6im0l"]
+[ext_resource type="Texture2D" uid="uid://hagiwmu05asx" path="res://images/PixelArt/Mech_defeat4.png" id="5_u7jhg"]
+[ext_resource type="Texture2D" uid="uid://d0qd2ewi1lwc7" path="res://images/PixelArt/Mech_defeat5.png" id="6_6im0l"]
+[ext_resource type="Texture2D" uid="uid://hxsm6d4k3e42" path="res://images/PixelArt/Mech_defeat6.png" id="7_yfi5l"]
+[ext_resource type="Texture2D" uid="uid://caxu254xp66x0" path="res://images/PixelArt/Drone_basic2.png" id="8_l62lt"]
+[ext_resource type="Texture2D" uid="uid://dcjxdxeg1tynh" path="res://images/PixelArt/Drone_basic1.png" id="9_pdemd"]
+[ext_resource type="Texture2D" uid="uid://b6suirpa6kxfv" path="res://images/PixelArt/Drone_basic3.png" id="10_30yg2"]
+[ext_resource type="Texture2D" uid="uid://djpo81j3rm5ij" path="res://images/PixelArt/Drone_basic5.png" id="12_yfi5l"]
 
 [sub_resource type="SpriteFrames" id="SpriteFrames_drone_body"]
 animations = [{
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("2_k7qk7")
+"texture": ExtResource("3_44pld")
 }],
 "loop": 0,
 "name": &"crash",
@@ -23,13 +25,13 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("3_2mi5k")
+"texture": ExtResource("3_cp30j")
 }, {
 "duration": 1.0,
-"texture": ExtResource("4_dumd5")
+"texture": ExtResource("4_u7jhg")
 }, {
 "duration": 1.0,
-"texture": ExtResource("5_v1lik")
+"texture": ExtResource("5_6im0l")
 }],
 "loop": 0,
 "name": &"defeated",
@@ -37,13 +39,13 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("6_tk1j0")
+"texture": ExtResource("5_u7jhg")
 }, {
 "duration": 1.0,
-"texture": ExtResource("7_ej2mc")
+"texture": ExtResource("6_6im0l")
 }, {
 "duration": 1.0,
-"texture": ExtResource("8_hclyb")
+"texture": ExtResource("7_yfi5l")
 }],
 "loop": 0,
 "name": &"deploy",
@@ -51,7 +53,7 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("2_k7qk7")
+"texture": ExtResource("8_l62lt")
 }],
 "loop": 0,
 "name": &"hit",
@@ -59,16 +61,16 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("9_7kqe7")
+"texture": ExtResource("9_pdemd")
 }, {
 "duration": 1.0,
-"texture": ExtResource("2_k7qk7")
+"texture": ExtResource("8_l62lt")
 }, {
 "duration": 1.0,
-"texture": ExtResource("10_adwuj")
+"texture": ExtResource("10_30yg2")
 }, {
 "duration": 1.0,
-"texture": ExtResource("2_k7qk7")
+"texture": ExtResource("8_l62lt")
 }],
 "loop": 1,
 "name": &"idle",
@@ -76,7 +78,10 @@ animations = [{
 }, {
 "frames": [{
 "duration": 1.0,
-"texture": ExtResource("2_k7qk7")
+"texture": ExtResource("8_l62lt")
+}, {
+"duration": 1.0,
+"texture": ExtResource("12_yfi5l")
 }],
 "loop": 0,
 "name": &"move",
@@ -98,7 +103,7 @@ script = ExtResource("1_drone")
 [node name="Body" type="AnimatedSprite2D" parent="." unique_id=772436198]
 scale = Vector2(0.3, 0.3)
 sprite_frames = SubResource("SpriteFrames_drone_body")
-animation = &"crash"
+animation = &"move"
 
 [node name="AttackEffect" type="AnimatedSprite2D" parent="." unique_id=1388721945]
 visible = false

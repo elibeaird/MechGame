@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cq26rbjoejes6"
-path="res://.godot/imported/basicDrone2.png-03c0e3fa473c38c465bbee31cee2f3dc.ctex"
+uid="uid://bxyyciukt6gdo"
+path="res://.godot/imported/Mech_attack2.png-40307f111054a57de6c53624f4a94cd3.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://images/PixelArt/basicDrone2.png"
-dest_files=["res://.godot/imported/basicDrone2.png-03c0e3fa473c38c465bbee31cee2f3dc.ctex"]
+source_file="res://images/PixelArt/Mech_attack2.png"
+dest_files=["res://.godot/imported/Mech_attack2.png-40307f111054a57de6c53624f4a94cd3.ctex"]
 
 [params]
 
